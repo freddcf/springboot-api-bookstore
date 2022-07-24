@@ -1,8 +1,0 @@
-dist: xenal
-language: java
-sudo: false
-jdk: zulujdk18
-install: true
-cache:
-  directories:
-    - $HOME/.m2
