@@ -108,7 +108,7 @@
 					</execution>
 				</executions>
 				<configuration>
-					<dotGitDirectory>${project.basedir}/../.git</dotGitDirectory>
+					<dotGitDirectory>${project.build.outputDirectory}/.git</dotGitDirectory>
 					<verbose>false</verbose>
 					<generateGitPropertiesFile>true</generateGitPropertiesFile>
 					<generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties
@@ -120,6 +120,7 @@
 						<includeOnlyProperty>git.commit.message.short</includeOnlyProperty>
 						<includeOnlyProperty>git.commit.time</includeOnlyProperty>
 					</includeOnlyProperties>
+					<failOnNoGitDirectory>false</failOnNoGitDirectory>
 				</configuration>
 			</plugin>
 			<plugin>
