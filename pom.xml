@@ -106,10 +106,19 @@
 						</goals>
 						<phase>initialize</phase>
 					</execution>
+					<execution>
+						<id>validate-the-git-infos</id>
+						<goals>
+							<goal>validateRevision</goal>
+						</goals>
+						<phase>package</phase>
+					</execution>
 				</executions>
 				<configuration>
 					<dotGitDirectory>${project.build.outputDirectory}/.git</dotGitDirectory>
-					<verbose>false</verbose>
+					<verbose>true</verbose>
+					<skip>false</skip>
+					<prefix>git</prefix>
 					<generateGitPropertiesFile>true</generateGitPropertiesFile>
 					<generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties
 					</generateGitPropertiesFilename>
@@ -120,7 +129,26 @@
 						<includeOnlyProperty>git.commit.message.short</includeOnlyProperty>
 						<includeOnlyProperty>git.commit.time</includeOnlyProperty>
 					</includeOnlyProperties>
+					<dateFormat>dd.MM.yyyy '@' HH:mm:ss z</dateFormat>
+					<dateFormatTimeZone>GMT-08:00</dateFormatTimeZone>
+					<useNativeGit>false</useNativeGit>
+					<abbrevLength>7</abbrevLength>
+					<format>properties</format>
+					<injectAllReactorProjects>true</injectAllReactorProjects>
+					<gitDescribe>
+						<skip>false</skip>
+						<always>false</always>
+						<abbrev>7</abbrev>
+						<match>*</match>
+						<dirty>-DEVEL</dirty>
+						<forceLongFormat>false</forceLongFormat>
+					</gitDescribe>
+					<excludeProperties>
+						<excludeProperty>git.commit.*</excludeProperty>
+						<excludeProperty>git.remote.origin.url</excludeProperty>
+					</excludeProperties>
 					<failOnNoGitDirectory>false</failOnNoGitDirectory>
+					<failOnUnableToExtractRepoInfo>true</failOnUnableToExtractRepoInfo>
 				</configuration>
 			</plugin>
 			<plugin>
