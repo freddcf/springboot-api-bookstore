@@ -120,7 +120,6 @@
 						<includeOnlyProperty>git.commit.message.short</includeOnlyProperty>
 						<includeOnlyProperty>git.commit.time</includeOnlyProperty>
 					</includeOnlyProperties>
-					<failOnNoGitDirectory>false</failOnNoGitDirectory>
 				</configuration>
 			</plugin>
 			<plugin>
