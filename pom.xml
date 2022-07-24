@@ -12,9 +12,12 @@
 	<artifactId>bookstoremanager</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>bookstoremanager</name>
-	<description>Bookstore Mananger project</description>
+	<description>Bookstore Manager project</description>
 	<properties>
 		<java.version>18</java.version>
+		<swagger.version>2.9.2</swagger.version>
+		<swagger-annotations.version>1.5.21</swagger-annotations.version>
+		<swagger-models.version>1.5.21</swagger-models.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -25,7 +28,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
@@ -47,6 +49,25 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-ui</artifactId>
+			<version>1.6.9</version>
+		</dependency>
+		<dependency>
+			<groupId>io.swagger</groupId>
+			<artifactId>swagger-annotations</artifactId>
+			<version>${swagger-annotations.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.swagger</groupId>
+			<artifactId>swagger-models</artifactId>
+			<version>${swagger-models.version}</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -61,8 +82,60 @@
 							<artifactId>lombok</artifactId>
 						</exclude>
 					</excludes>
+					<jvmArguments>-Dspring.application.admin.enabled=true</jvmArguments>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>start</goal>
+							<goal>stop</goal>
+							<goal>build-info</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>io.github.git-commit-id</groupId>
+				<artifactId>git-commit-id-maven-plugin</artifactId>
+				<version>5.0.0</version>
+				<executions>
+					<execution>
+						<id>get-the-git-infos</id>
+						<goals>
+							<goal>revision</goal>
+						</goals>
+						<phase>initialize</phase>
+					</execution>
+				</executions>
+				<configuration>
+					<dotGitDirectory>${project.build.outputDirectory}/.git</dotGitDirectory>
+					<verbose>false</verbose>
+					<generateGitPropertiesFile>true</generateGitPropertiesFile>
+					<generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties
+					</generateGitPropertiesFilename>
+					<commitIdGenerationMode>full</commitIdGenerationMode>
+					<includeOnlyProperties>
+						<includeOnlyProperty>git.commit.id.abbrev</includeOnlyProperty>
+						<includeOnlyProperty>git.commit.id.full</includeOnlyProperty>
+						<includeOnlyProperty>git.commit.message.short</includeOnlyProperty>
+						<includeOnlyProperty>git.commit.time</includeOnlyProperty>
+					</includeOnlyProperties>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.springdoc</groupId>
+				<artifactId>springdoc-openapi-maven-plugin</artifactId>
+				<version>1.4</version>
+				<executions>
+					<execution>
+						<id>integration-test</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
 		</plugins>
 	</build>
 

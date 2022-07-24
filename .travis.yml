@@ -1,0 +1,8 @@
+dist: xenal
+language: java
+sudo: false
+jdk: openjdk14
+install: true
+cache:
+  directories:
+    - $HOME/.m2
