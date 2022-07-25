@@ -1,12 +1,13 @@
 package com.fredfonseca.bookstoremanager.entity;
 
+import com.fredfonseca.bookstoremanager.entityauditable.Auditable;
 import lombok.Data;
 
 import javax.persistence.*;
 
 @Data
 @Entity
-public class Book {
+public class Book extends Auditable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
