@@ -1,6 +1,7 @@
-package com.fredfonseca.bookstoremanager.entity;
+package com.fredfonseca.bookstoremanager.users.entity;
 
-import com.fredfonseca.bookstoremanager.entityauditable.Auditable;
+import com.fredfonseca.bookstoremanager.books.entity.Book;
+import com.fredfonseca.bookstoremanager.entity.Auditable;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -39,3 +40,4 @@ public class Users extends Auditable {
     @OneToMany(mappedBy = "users", fetch = FetchType.LAZY)
     private List<Book> books;
 }
+

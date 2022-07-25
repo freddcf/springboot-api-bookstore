@@ -1,6 +1,7 @@
-package com.fredfonseca.bookstoremanager.entity;
+package com.fredfonseca.bookstoremanager.publishers.entity;
 
-import com.fredfonseca.bookstoremanager.entityauditable.Auditable;
+import com.fredfonseca.bookstoremanager.books.entity.Book;
+import com.fredfonseca.bookstoremanager.entity.Auditable;
 import lombok.Data;
 
 import javax.persistence.*;
