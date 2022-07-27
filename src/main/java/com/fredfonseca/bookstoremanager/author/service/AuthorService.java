@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthorService {
 
-    private final static AuthorMapper authorMapper = AuthorMapper.INSTANCE;
+//    private final static AuthorMapper authorMapper = AuthorMapper.INSTANCE;
 
     private AuthorRepository authorRepository;
 
