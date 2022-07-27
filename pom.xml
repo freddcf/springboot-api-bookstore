@@ -100,7 +100,6 @@
 					<execution>
 						<goals>
 							<goal>start</goal>
-							<goal>stop</goal>
 							<goal>build-info</goal>
 						</goals>
 					</execution>
