@@ -29,6 +29,6 @@ public class AuthorService {
 
     private void verifyExists(String authorName) {
         authorRepository.findByName(authorName)
-                .ifPresent(author -> {throw new AuthorAlreadyExistsException(authorName);});
+                .ifPresent(author -> { throw new AuthorAlreadyExistsException(authorName); });
     }
 }
