@@ -53,6 +53,12 @@ public class AuthorService {
         authorRepository.deleteById(id);
     }
 
+    public AuthorDTO update(AuthorDTO authorDTO) {
+        Author authorToCreate = authorMapper.toModel(authorDTO);
+        Author createdAuthor = authorRepository.save(authorToCreate);
+        return authorMapper.toDTO(createdAuthor);
+    }
+
     private Author verifyAndGetAuthor(Long id) {
         Author foundAuthor = authorRepository.findById(id)
                 .orElseThrow(() -> new AuthorNotFoundException(id));
