@@ -9,6 +9,9 @@ import com.fredfonseca.bookstoremanager.author.repository.AuthorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class AuthorService {
 
@@ -37,5 +40,12 @@ public class AuthorService {
     private void verifyExists(String authorName) {
         authorRepository.findByName(authorName)
                 .ifPresent(author -> { throw new AuthorAlreadyExistsException(authorName); });
+    }
+
+    public List<AuthorDTO> findAll() {
+        return authorRepository.findAll()
+                .stream()
+                .map(authorMapper::toDTO)
+                .collect(Collectors.toList());
     }
 }
