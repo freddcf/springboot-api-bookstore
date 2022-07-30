@@ -41,4 +41,9 @@ public class AuthorController implements AuthorControllerDocs{
     public void delete(@PathVariable Long id) {
         authorService.delete(id);
     }
+
+    @PutMapping
+    public AuthorDTO update(@RequestBody @Valid AuthorDTO authorDTO) {
+        return authorService.update(authorDTO);
+    }
 }
