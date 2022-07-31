@@ -36,11 +36,6 @@ public class AuthorService {
         return authorMapper.toDTO(foundAuthor);
     }
 
-    private void verifyExists(String authorName) {
-        authorRepository.findByName(authorName)
-                .ifPresent(author -> { throw new AuthorAlreadyExistsException(authorName); });
-    }
-
     public List<AuthorDTO> findAll() {
         return authorRepository.findAll()
                 .stream()
@@ -54,9 +49,21 @@ public class AuthorService {
     }
 
     public AuthorDTO update(AuthorDTO authorDTO) {
+        verifyIfExists(authorDTO.getId(), authorDTO.getName());
         Author authorToCreate = authorMapper.toModel(authorDTO);
         Author createdAuthor = authorRepository.save(authorToCreate);
         return authorMapper.toDTO(createdAuthor);
+    }
+
+    private void verifyIfExists(Long id, String name) {
+        authorRepository.findById(id)
+                .orElseThrow(() -> new AuthorNotFoundException(id));
+        verifyExists(name);
+    }
+
+    private void verifyExists(String authorName) {
+        authorRepository.findByName(authorName)
+                .ifPresent(author -> { throw new AuthorAlreadyExistsException(authorName); });
     }
 
     private Author verifyAndGetAuthor(Long id) {
