@@ -1,5 +1,6 @@
 package com.fredfonseca.bookstoremanager.publishers.service;
 
+import com.fredfonseca.bookstoremanager.author.exception.AuthorAlreadyExistsException;
 import com.fredfonseca.bookstoremanager.publishers.dto.PublisherDTO;
 import com.fredfonseca.bookstoremanager.publishers.entity.Publisher;
 import com.fredfonseca.bookstoremanager.publishers.exception.PublisherAlreadyExistsException;
@@ -52,20 +53,31 @@ public class PublisherService {
     }
 
     public PublisherDTO update(PublisherDTO publisherDTO) {
-        verifyIfExists(publisherDTO.getId());
+        verifyIfExists(publisherDTO.getId(), publisherDTO.getName(), publisherDTO.getCode());
         Publisher publisherToCreate = publisherMapper.toModel(publisherDTO);
         Publisher createdPublisher = publisherRepository.save(publisherToCreate);
         return publisherMapper.toDTO(createdPublisher);
+    }
+
+    private void verifyIfExists(Long id) {
+        publisherRepository.findById(id)
+                .orElseThrow(() -> new PublisherNotFoundException(id));
+    }
+
+    private void verifyIfExists(Long id, String name, String code) {
+        publisherRepository.findById(id)
+                .orElseThrow(() -> new PublisherNotFoundException(id));
+
+        Optional<Publisher> samePublisher = publisherRepository
+                .findByNameOrCode(name, code);
+
+        if(samePublisher.isPresent() && samePublisher.get().getId() != id)
+            throw new PublisherAlreadyExistsException(name, code);
     }
 
     private void verifyIfExists(String name, String code) {
         Optional<Publisher> duplicatedPublisher = publisherRepository
                 .findByNameOrCode(name, code);
         if(duplicatedPublisher.isPresent()) throw new PublisherAlreadyExistsException(name, code);
-    }
-
-    private void verifyIfExists(Long id) {
-        publisherRepository.findById(id)
-                .orElseThrow(() -> new PublisherNotFoundException(id));
     }
 }
