@@ -51,6 +51,13 @@ public class PublisherService {
         publisherRepository.deleteById(id);
     }
 
+    public PublisherDTO update(PublisherDTO publisherDTO) {
+        verifyIfExists(publisherDTO.getId());
+        Publisher publisherToCreate = publisherMapper.toModel(publisherDTO);
+        Publisher createdPublisher = publisherRepository.save(publisherToCreate);
+        return publisherMapper.toDTO(createdPublisher);
+    }
+
     private void verifyIfExists(String name, String code) {
         Optional<Publisher> duplicatedPublisher = publisherRepository
                 .findByNameOrCode(name, code);

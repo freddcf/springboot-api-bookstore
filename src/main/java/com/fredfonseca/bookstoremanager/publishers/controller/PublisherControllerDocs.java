@@ -37,4 +37,11 @@ public interface PublisherControllerDocs {
             @ApiResponse(code = 404, message = "Publisher not found error")
     })
     void delete(Long id);
+
+    @ApiOperation(value = "Publisher update operation")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success publisher update"),
+            @ApiResponse(code = 400, message = "Missing required fields, wrong field range value or author already registered on system")
+    })
+    PublisherDTO update(PublisherDTO publisherDTO);
 }
