@@ -4,6 +4,7 @@ import com.fredfonseca.bookstoremanager.users.dto.MessageDTO;
 import com.fredfonseca.bookstoremanager.users.dto.UserDTO;
 import com.fredfonseca.bookstoremanager.users.entity.Users;
 import com.fredfonseca.bookstoremanager.users.exception.UserAlreadyExistsException;
+import com.fredfonseca.bookstoremanager.users.exception.UserNotFoundException;
 import com.fredfonseca.bookstoremanager.users.mapper.UserMapper;
 import com.fredfonseca.bookstoremanager.users.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,16 @@ public class UserService {
         Users userToCreate = userMapper.toModel(userToCreateDTO);
         Users createdUser = userRepository.save(userToCreate);
         return creationMessage(createdUser);
+    }
+
+    public void delete(Long id) {
+        verifyIfExists(id);
+        userRepository.deleteById(id);
+    }
+
+    private void verifyIfExists(Long id) {
+        userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
     }
 
     private void verifyIfExists(String email, String username) {

@@ -16,4 +16,11 @@ public interface UserControllerDocs {
             @ApiResponse(code = 400, message = "Missing required field, or an error on validation field rules")
     })
     MessageDTO create(UserDTO userToCreateDTO);
+
+    @ApiOperation(value = "User delete operation")
+    @ApiResponses(value = {
+            @ApiResponse(code = 204, message = "Success user exclusion"),
+            @ApiResponse(code = 404, message = "User with id not found in the System")
+    })
+    void delete(Long id);
 }
