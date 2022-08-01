@@ -11,6 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/publishers")
+@CrossOrigin(origins = "*")
 public class PublisherController implements PublisherControllerDocs{
 
     private PublisherService publisherService;

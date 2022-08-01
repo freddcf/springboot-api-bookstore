@@ -11,6 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/authors")
+@CrossOrigin(origins = "*")
 public class AuthorController implements AuthorControllerDocs{
 
     private AuthorService authorService;
