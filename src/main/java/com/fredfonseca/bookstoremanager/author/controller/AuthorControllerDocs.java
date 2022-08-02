@@ -42,5 +42,5 @@ public interface AuthorControllerDocs {
             @ApiResponse(code = 200, message = "Success author update"),
             @ApiResponse(code = 400, message = "Missing required fields, wrong field range value or author already registered on system")
     })
-    AuthorDTO update(AuthorDTO authorDTO);
+    AuthorDTO update(Long id, AuthorDTO authorDTO);
 }

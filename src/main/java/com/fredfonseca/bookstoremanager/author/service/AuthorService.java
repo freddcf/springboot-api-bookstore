@@ -25,7 +25,7 @@ public class AuthorService {
     }
 
     public AuthorDTO create(AuthorDTO authorDTO) {
-        verifyExists(authorDTO.getName());
+        verifyIfExists(authorDTO.getName());
         Author authorToCreate = authorMapper.toModel(authorDTO);
         Author createdAuthor = authorRepository.save(authorToCreate);
         return authorMapper.toDTO(createdAuthor);
@@ -48,27 +48,23 @@ public class AuthorService {
         authorRepository.deleteById(id);
     }
 
-    public AuthorDTO update(AuthorDTO authorDTO) {
-        verifyIfExists(authorDTO.getId(), authorDTO.getName());
+    public AuthorDTO update(Long id, AuthorDTO authorDTO) {
+        Author foundAuthor = verifyAndGetAuthor(id);
+        verifyIfExists(authorDTO.getName());
+        authorDTO.setId(foundAuthor.getId());
+
         Author authorToCreate = authorMapper.toModel(authorDTO);
         Author createdAuthor = authorRepository.save(authorToCreate);
         return authorMapper.toDTO(createdAuthor);
     }
 
-    private void verifyIfExists(Long id, String name) {
-        authorRepository.findById(id)
-                .orElseThrow(() -> new AuthorNotFoundException(id));
-        verifyExists(name);
-    }
-
-    private void verifyExists(String authorName) {
+    private void verifyIfExists(String authorName) {
         authorRepository.findByName(authorName)
                 .ifPresent(author -> { throw new AuthorAlreadyExistsException(authorName); });
     }
 
     private Author verifyAndGetAuthor(Long id) {
-        Author foundAuthor = authorRepository.findById(id)
+         return authorRepository.findById(id)
                 .orElseThrow(() -> new AuthorNotFoundException(id));
-        return foundAuthor;
     }
 }
