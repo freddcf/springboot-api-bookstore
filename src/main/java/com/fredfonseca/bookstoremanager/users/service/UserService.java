@@ -10,7 +10,9 @@ import com.fredfonseca.bookstoremanager.users.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.fredfonseca.bookstoremanager.users.utils.MessageDTOUtils.creationMessage;
 import static com.fredfonseca.bookstoremanager.users.utils.MessageDTOUtils.updatedMessage;
@@ -48,6 +50,18 @@ public class UserService {
     public void delete(Long id) {
         verifyAndGetIfExists(id);
         userRepository.deleteById(id);
+    }
+
+    public UserDTO findById(Long id) {
+        Users foundUser = verifyAndGetIfExists(id);
+        return userMapper.toDTO(foundUser);
+    }
+
+    public List<UserDTO> findAll() {
+        return userRepository.findAll()
+                .stream()
+                .map(userMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
     private Users verifyAndGetIfExists(Long id) {

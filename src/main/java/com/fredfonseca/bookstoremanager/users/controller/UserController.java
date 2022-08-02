@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -36,5 +37,15 @@ public class UserController implements UserControllerDocs{
     @PutMapping("/{id}")
     public MessageDTO update(@PathVariable Long id, @RequestBody @Valid UserDTO userToUpdateDTO) {
         return userService.update(id, userToUpdateDTO);
+    }
+
+    @GetMapping("/{id}")
+    public UserDTO findById(@PathVariable Long id) {
+        return userService.findById(id);
+    }
+
+    @GetMapping
+    public List<UserDTO> findAll() {
+        return userService.findAll();
     }
 }
