@@ -52,15 +52,15 @@ public class PublisherService {
         publisherRepository.deleteById(id);
     }
 
-    public PublisherDTO update(Long id, PublisherDTO publisherDTO) {
+    public PublisherDTO update(Long id, PublisherDTO publisherToUpdateDTO) {
         Publisher foundPublisher = verifyAndGetAuthor(id);
-        publisherDTO.setId(foundPublisher.getId());
+        publisherToUpdateDTO.setId(foundPublisher.getId());
 
-        verifyIfExists(publisherDTO.getId(), publisherDTO.getName(), publisherDTO.getCode());
+        verifyIfExists(publisherToUpdateDTO.getId(), publisherToUpdateDTO.getName(), publisherToUpdateDTO.getCode());
 
-        Publisher publisherToCreate = publisherMapper.toModel(publisherDTO);
-        Publisher createdPublisher = publisherRepository.save(publisherToCreate);
-        return publisherMapper.toDTO(createdPublisher);
+        Publisher publisherToUpdate = publisherMapper.toModel(publisherToUpdateDTO);
+        Publisher updatedPublisher = publisherRepository.save(publisherToUpdate);
+        return publisherMapper.toDTO(updatedPublisher);
     }
 
     private void verifyIfExists(Long id, String name, String code) {

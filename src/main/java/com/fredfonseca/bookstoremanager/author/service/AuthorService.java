@@ -48,14 +48,14 @@ public class AuthorService {
         authorRepository.deleteById(id);
     }
 
-    public AuthorDTO update(Long id, AuthorDTO authorDTO) {
+    public AuthorDTO update(Long id, AuthorDTO authorToUpdateDTO) {
         Author foundAuthor = verifyAndGetAuthor(id);
-        verifyIfExists(authorDTO.getName());
-        authorDTO.setId(foundAuthor.getId());
+        verifyIfExists(authorToUpdateDTO.getName());
+        authorToUpdateDTO.setId(foundAuthor.getId());
 
-        Author authorToCreate = authorMapper.toModel(authorDTO);
-        Author createdAuthor = authorRepository.save(authorToCreate);
-        return authorMapper.toDTO(createdAuthor);
+        Author authorToUpdate = authorMapper.toModel(authorToUpdateDTO);
+        Author updatedAuthor = authorRepository.save(authorToUpdate);
+        return authorMapper.toDTO(updatedAuthor);
     }
 
     private void verifyIfExists(String authorName) {
