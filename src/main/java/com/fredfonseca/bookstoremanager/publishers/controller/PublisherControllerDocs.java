@@ -43,5 +43,5 @@ public interface PublisherControllerDocs {
             @ApiResponse(code = 200, message = "Success publisher update"),
             @ApiResponse(code = 400, message = "Missing required fields, wrong field range value or author already registered on system")
     })
-    PublisherDTO update(PublisherDTO publisherDTO);
+    PublisherDTO update(Long id, PublisherDTO publisherDTO);
 }
