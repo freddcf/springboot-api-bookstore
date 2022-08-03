@@ -25,8 +25,8 @@ public class Book {
     @Column(nullable = false, columnDefinition = "TIMESTAMP")
     private LocalDate launchDate;
 
-    @ManyToOne(cascade = {CascadeType.MERGE})
-    private Author author;
+    @Column(nullable = false)
+    private String author;
 
     @ManyToOne(cascade = {CascadeType.MERGE})
     private Publisher publisher;

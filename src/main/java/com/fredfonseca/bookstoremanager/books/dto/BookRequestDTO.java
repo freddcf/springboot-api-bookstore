@@ -1,13 +1,19 @@
 package com.fredfonseca.bookstoremanager.books.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
-public class BookDTO {
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class BookRequestDTO {
 
     private Long id;
 
@@ -17,10 +23,18 @@ public class BookDTO {
     private String name;
 
     @NotNull
-    @NotEmpty
-    private int quantity;
+    private Integer quantity;
 
     @NotNull
+    @NotEmpty
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     private LocalDate launchDate;
+
+    @NotNull
+    @NotEmpty
+    private String authorName;
+
+    @NotNull
+    @NotEmpty
+    private String publisherName;
 }
