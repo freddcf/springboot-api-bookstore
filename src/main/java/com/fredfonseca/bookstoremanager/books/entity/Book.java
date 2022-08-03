@@ -3,14 +3,14 @@ package com.fredfonseca.bookstoremanager.books.entity;
 import com.fredfonseca.bookstoremanager.author.entity.Author;
 import com.fredfonseca.bookstoremanager.publishers.entity.Publisher;
 import com.fredfonseca.bookstoremanager.users.entity.Users;
-import com.fredfonseca.bookstoremanager.entity.Auditable;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Data
 @Entity
-public class Book extends Auditable {
+public class Book {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,14 +19,11 @@ public class Book extends Auditable {
     @Column(nullable = false, length = 100)
     private String name;
 
-    @Column(nullable = false)
-    private String isbn;
-
     @Column(columnDefinition = "integer default 0")
-    private int pages;
+    private int quantity;
 
-    @Column(columnDefinition = "integer default 0")
-    private int chapters;
+    @Column(nullable = false, columnDefinition = "TIMESTAMP")
+    private LocalDate launchDate;
 
     @ManyToOne(cascade = {CascadeType.MERGE})
     private Author author;

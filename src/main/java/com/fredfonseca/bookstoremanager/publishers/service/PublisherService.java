@@ -27,7 +27,7 @@ public class PublisherService {
     }
 
     public PublisherDTO create(PublisherDTO publisherDTO) {
-        verifyIfExists(publisherDTO.getName(), publisherDTO.getCode());
+        verifyIfExists(publisherDTO.getName());
 
         Publisher publisherToCreate = publisherMapper.toModel(publisherDTO);
         Publisher createdPublisher = publisherRepository.save(publisherToCreate);
@@ -56,28 +56,28 @@ public class PublisherService {
         Publisher foundPublisher = verifyAndGetAuthor(id);
         publisherToUpdateDTO.setId(foundPublisher.getId());
 
-        verifyIfExists(publisherToUpdateDTO.getId(), publisherToUpdateDTO.getName(), publisherToUpdateDTO.getCode());
+        verifyIfExists(publisherToUpdateDTO.getId(), publisherToUpdateDTO.getName());
 
         Publisher publisherToUpdate = publisherMapper.toModel(publisherToUpdateDTO);
         Publisher updatedPublisher = publisherRepository.save(publisherToUpdate);
         return publisherMapper.toDTO(updatedPublisher);
     }
 
-    private void verifyIfExists(Long id, String name, String code) {
+    private void verifyIfExists(Long id, String name) {
         publisherRepository.findById(id)
                 .orElseThrow(() -> new PublisherNotFoundException(id));
 
         Optional<Publisher> samePublisher = publisherRepository
-                .findByNameOrCode(name, code);
+                .findByName(name);
 
         if(samePublisher.isPresent() && samePublisher.get().getId() != id)
-            throw new PublisherAlreadyExistsException(name, code);
+            throw new PublisherAlreadyExistsException(name);
     }
 
-    private void verifyIfExists(String name, String code) {
+    private void verifyIfExists(String name) {
         Optional<Publisher> duplicatedPublisher = publisherRepository
-                .findByNameOrCode(name, code);
-        if(duplicatedPublisher.isPresent()) throw new PublisherAlreadyExistsException(name, code);
+                .findByName(name);
+        if(duplicatedPublisher.isPresent()) throw new PublisherAlreadyExistsException(name);
     }
 
     private Publisher verifyAndGetAuthor(Long id) {
