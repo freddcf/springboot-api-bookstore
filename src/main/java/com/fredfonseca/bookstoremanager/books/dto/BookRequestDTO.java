@@ -26,13 +26,12 @@ public class BookRequestDTO {
     private Integer quantity;
 
     @NotNull
-    @NotEmpty
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     private LocalDate launchDate;
 
     @NotNull
     @NotEmpty
-    private String authorName;
+    private String author;
 
     @NotNull
     @NotEmpty
