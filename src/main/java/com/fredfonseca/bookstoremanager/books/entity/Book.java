@@ -1,6 +1,5 @@
 package com.fredfonseca.bookstoremanager.books.entity;
 
-import com.fredfonseca.bookstoremanager.author.entity.Author;
 import com.fredfonseca.bookstoremanager.publishers.entity.Publisher;
 import com.fredfonseca.bookstoremanager.users.entity.Users;
 import lombok.Data;

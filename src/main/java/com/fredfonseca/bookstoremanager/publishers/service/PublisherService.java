@@ -48,12 +48,12 @@ public class PublisherService {
     }
 
     public void delete(Long id) {
-        verifyAndGetAuthor(id);
+        verifyAndGetPublisher(id);
         publisherRepository.deleteById(id);
     }
 
     public PublisherDTO update(Long id, PublisherDTO publisherToUpdateDTO) {
-        Publisher foundPublisher = verifyAndGetAuthor(id);
+        Publisher foundPublisher = verifyAndGetPublisher(id);
         publisherToUpdateDTO.setId(foundPublisher.getId());
 
         verifyIfExists(publisherToUpdateDTO.getId(), publisherToUpdateDTO.getName());
@@ -80,8 +80,13 @@ public class PublisherService {
         if(duplicatedPublisher.isPresent()) throw new PublisherAlreadyExistsException(name);
     }
 
-    private Publisher verifyAndGetAuthor(Long id) {
+    private Publisher verifyAndGetPublisher(Long id) {
         return publisherRepository.findById(id)
-                .orElseThrow(() -> new AuthorNotFoundException(id));
+                .orElseThrow(() -> new PublisherNotFoundException(id));
+    }
+
+    public Publisher verifyAndGetIfExists(String name) {
+        return publisherRepository.findByName(name)
+                .orElseThrow(() -> new PublisherNotFoundException(name));
     }
 }

@@ -20,6 +20,6 @@ public class Author {
     @Column(columnDefinition = "integer default 0")
     private int age;
 
-    @OneToMany(mappedBy = "author", fetch = FetchType.LAZY)
-    private List<Book> books;
+//    @OneToMany(mappedBy = "author", fetch = FetchType.LAZY)
+//    private List<Book> books;
 }
