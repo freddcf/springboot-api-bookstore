@@ -4,6 +4,7 @@ import com.fredfonseca.bookstoremanager.books.dto.BookRequestDTO;
 import com.fredfonseca.bookstoremanager.books.dto.BookResponseDTO;
 import com.fredfonseca.bookstoremanager.books.entity.Book;
 import com.fredfonseca.bookstoremanager.books.exception.BookAlreadyExistsException;
+import com.fredfonseca.bookstoremanager.books.exception.BookNotFoundException;
 import com.fredfonseca.bookstoremanager.books.mapper.BookMapper;
 import com.fredfonseca.bookstoremanager.books.repository.BookRepository;
 import com.fredfonseca.bookstoremanager.publishers.entity.Publisher;
@@ -44,7 +45,13 @@ public class BookService {
         return bookMapper.toDTO(savedBook);
     }
 
-    public void verifyIfExists(String name) {
+    public BookResponseDTO findById(Long id) {
+        return bookRepository.findById(id)
+                .map(bookMapper::toDTO)
+                .orElseThrow(() -> new BookNotFoundException(id));
+    }
+
+    private void verifyIfExists(String name) {
         Optional<Book> duplicatedBook = bookRepository
                 .findByName(name);
         if(duplicatedBook.isPresent()) throw new BookAlreadyExistsException(name);
