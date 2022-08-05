@@ -31,4 +31,11 @@ public interface BookControllerDocs {
             @ApiResponse(code = 200, message = "Success book list found"),
     })
     List<BookResponseDTO> findAll();
+
+    @ApiOperation(value = "Book delete operation")
+    @ApiResponses(value = {
+            @ApiResponse(code = 202, message = "Success book exclusion"),
+            @ApiResponse(code = 404, message = "Book not found error")
+    })
+    void delete(Long id);
 }
