@@ -34,7 +34,7 @@ public class BookService {
     }
 
     public BookResponseDTO create(BookRequestDTO bookRequestDTO) {
-        verifyIfExists(bookRequestDTO.getName(), bookRequestDTO.getAuthor());
+        verifyIfExists(bookRequestDTO.getName());
         Publisher foundPublisher = publisherService.verifyAndGetIfExists(bookRequestDTO.getPublisherName());
 
         Book bookToSave = bookMapper.toModel(bookRequestDTO);
@@ -44,9 +44,9 @@ public class BookService {
         return bookMapper.toDTO(savedBook);
     }
 
-    private void verifyIfExists(String name, String author) {
-        List<Book> duplicatedBook = bookRepository
-                .findByNameAndAuthor(name, author);
-        if(!duplicatedBook.isEmpty()) throw new BookAlreadyExistsException(name, author);
+    public void verifyIfExists(String name) {
+        Optional<Book> duplicatedBook = bookRepository
+                .findByName(name);
+        if(duplicatedBook.isPresent()) throw new BookAlreadyExistsException(name);
     }
 }
