@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class BookService {
@@ -49,6 +50,12 @@ public class BookService {
         return bookRepository.findById(id)
                 .map(bookMapper::toDTO)
                 .orElseThrow(() -> new BookNotFoundException(id));
+    }
+
+    public List<BookResponseDTO> findAll() {
+        return bookRepository.findAll().stream()
+                .map(bookMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
     private void verifyIfExists(String name) {
