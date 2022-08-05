@@ -25,4 +25,9 @@ public class BookController implements  BookControllerDocs{
     public BookResponseDTO create(@RequestBody @Valid BookRequestDTO bookRequestDTO) {
         return bookService.create(bookRequestDTO);
     }
+
+    @GetMapping("/{id}")
+    public BookResponseDTO findById(@PathVariable Long id) {
+        return bookService.findById(id);
+    }
 }
