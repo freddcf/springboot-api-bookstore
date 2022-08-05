@@ -58,6 +58,16 @@ public class BookService {
                 .collect(Collectors.toList());
     }
 
+    public void delete(Long id) {
+        verifyAndGetBook(id);
+        bookRepository.deleteById(id);
+    }
+
+    private Book verifyAndGetBook(Long id) {
+        return bookRepository.findById(id)
+                .orElseThrow(() -> new BookNotFoundException(id));
+    }
+
     private void verifyIfExists(String name) {
         Optional<Book> duplicatedBook = bookRepository
                 .findByName(name);
