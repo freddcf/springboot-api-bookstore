@@ -7,6 +7,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
+import java.util.List;
+
 @Api("Books module management")
 public interface BookControllerDocs {
 
@@ -23,4 +25,10 @@ public interface BookControllerDocs {
             @ApiResponse(code = 404, message = "Book not found error")
     })
     BookResponseDTO findById(Long id);
+
+    @ApiOperation(value = "List all books operation")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success book list found"),
+    })
+    List<BookResponseDTO> findAll();
 }
