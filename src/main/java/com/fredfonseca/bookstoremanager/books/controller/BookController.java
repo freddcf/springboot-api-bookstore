@@ -42,4 +42,9 @@ public class BookController implements  BookControllerDocs{
     public void delete(@PathVariable Long id) {
         bookService.delete(id);
     }
+
+    @PutMapping("/{id}")
+    public BookResponseDTO update(@PathVariable Long id, @RequestBody BookRequestDTO bookRequestDTO) {
+        return bookService.update(id, bookRequestDTO);
+    }
 }

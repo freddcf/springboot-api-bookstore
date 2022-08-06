@@ -63,6 +63,18 @@ public class BookService {
         bookRepository.deleteById(id);
     }
 
+    public BookResponseDTO update(Long id, BookRequestDTO bookRequestDTO) {
+        Book foundBook = verifyAndGetBook(id);
+        Publisher foundPublisher = publisherService.verifyAndGetIfExists(bookRequestDTO.getPublisherName());
+
+        Book bookToUpdate = bookMapper.toModel(bookRequestDTO);
+        bookToUpdate.setId(id);
+        bookToUpdate.setPublisher(foundPublisher);
+        bookToUpdate.setLaunchDate(foundBook.getLaunchDate());
+        Book updatedBook = bookRepository.save(bookToUpdate);
+        return bookMapper.toDTO(updatedBook);
+    }
+
     private Book verifyAndGetBook(Long id) {
         return bookRepository.findById(id)
                 .orElseThrow(() -> new BookNotFoundException(id));
