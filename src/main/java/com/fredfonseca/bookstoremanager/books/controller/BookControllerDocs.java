@@ -38,4 +38,11 @@ public interface BookControllerDocs {
             @ApiResponse(code = 404, message = "Book not found error")
     })
     void delete(Long id);
+
+    @ApiOperation(value = "Book update operation")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success book updated"),
+            @ApiResponse(code = 400, message = "Missing required field, or an error on validation field rules")
+    })
+    BookResponseDTO update(Long id, BookRequestDTO bookRequestDTO);
 }

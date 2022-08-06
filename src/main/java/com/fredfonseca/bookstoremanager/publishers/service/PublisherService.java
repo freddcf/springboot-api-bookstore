@@ -1,6 +1,5 @@
 package com.fredfonseca.bookstoremanager.publishers.service;
 
-import com.fredfonseca.bookstoremanager.author.exception.AuthorNotFoundException;
 import com.fredfonseca.bookstoremanager.publishers.dto.PublisherDTO;
 import com.fredfonseca.bookstoremanager.publishers.entity.Publisher;
 import com.fredfonseca.bookstoremanager.publishers.exception.PublisherAlreadyExistsException;
