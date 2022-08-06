@@ -1,10 +1,9 @@
 package com.fredfonseca.bookstoremanager.users.entity;
 
-import com.fredfonseca.bookstoremanager.books.entity.Book;
+import com.fredfonseca.bookstoremanager.rentals.entity.Rental;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.util.List;
 
 @Data
@@ -28,6 +27,6 @@ public class Users {
     private String address;
 
     @OneToMany(mappedBy = "users", fetch = FetchType.LAZY)
-    private List<Book> books;
+    private List<Rental> rentals;
 }
 
