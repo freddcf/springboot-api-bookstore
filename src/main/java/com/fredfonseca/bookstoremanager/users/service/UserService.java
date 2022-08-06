@@ -1,6 +1,5 @@
 package com.fredfonseca.bookstoremanager.users.service;
 
-import com.fredfonseca.bookstoremanager.users.dto.MessageDTO;
 import com.fredfonseca.bookstoremanager.users.dto.UserDTO;
 import com.fredfonseca.bookstoremanager.users.entity.Users;
 import com.fredfonseca.bookstoremanager.users.exception.UserAlreadyExistsException;
@@ -14,9 +13,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.fredfonseca.bookstoremanager.users.utils.MessageDTOUtils.creationMessage;
-import static com.fredfonseca.bookstoremanager.users.utils.MessageDTOUtils.updatedMessage;
-
 @Service
 public class UserService {
 
@@ -29,22 +25,22 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public MessageDTO create(UserDTO userToCreateDTO) {
-        verifyIfExists(userToCreateDTO.getEmail(), userToCreateDTO.getUsername());
+    public UserDTO create(UserDTO userToCreateDTO) {
+        verifyIfExists(userToCreateDTO.getEmail());
         Users userToCreate = userMapper.toModel(userToCreateDTO);
 
         Users createdUser = userRepository.save(userToCreate);
-        return creationMessage(createdUser);
+        return userMapper.toDTO(createdUser);
     }
 
-    public MessageDTO update(Long id, UserDTO userToUpdateDTO) {
+    public UserDTO update(Long id, UserDTO userToUpdateDTO) {
         Users foundUser = verifyAndGetIfExists(id);
 
         userToUpdateDTO.setId(foundUser.getId());
         Users userToUpdate = userMapper.toModel(userToUpdateDTO);
 
         Users updatedUser = userRepository.save(userToUpdate);
-        return updatedMessage(updatedUser);
+        return userMapper.toDTO(updatedUser);
     }
 
     public void delete(Long id) {
@@ -69,9 +65,9 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException(id));
     }
 
-    private void verifyIfExists(String email, String username) {
-        Optional<Users> foundUser = userRepository.findByEmailOrUsername(email, username);
-        if(foundUser.isPresent()) throw new UserAlreadyExistsException(email, username);
+    private void verifyIfExists(String email) {
+        Optional<Users> foundUser = userRepository.findByEmail(email);
+        if(foundUser.isPresent()) throw new UserAlreadyExistsException(email);
     }
 
 }

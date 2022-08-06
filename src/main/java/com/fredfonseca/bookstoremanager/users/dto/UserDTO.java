@@ -35,16 +35,4 @@ public class UserDTO {
     @NotNull
     @NotEmpty
     private String address;
-
-    @NotNull
-    @NotEmpty
-    private String username;
-
-    @NotNull
-    @NotEmpty
-    private String password;
-
-    @NotNull
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
-    private LocalDate birthDate;
 }
