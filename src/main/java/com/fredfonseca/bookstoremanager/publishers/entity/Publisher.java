@@ -1,6 +1,7 @@
 package com.fredfonseca.bookstoremanager.publishers.entity;
 
 import com.fredfonseca.bookstoremanager.books.entity.Book;
+import com.fredfonseca.bookstoremanager.rentals.entity.Rental;
 import lombok.Data;
 
 import javax.persistence.*;
