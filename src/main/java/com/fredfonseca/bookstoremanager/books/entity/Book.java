@@ -20,6 +20,9 @@ public class Book {
     @Column(columnDefinition = "integer default 0")
     private int quantity;
 
+    @Column(columnDefinition = "integer default 0")
+    private int rentedQuantity;
+
     @Column(nullable = false)
     private LocalDate launchDate;
 
