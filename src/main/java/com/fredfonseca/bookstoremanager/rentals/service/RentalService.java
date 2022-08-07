@@ -7,6 +7,7 @@ import com.fredfonseca.bookstoremanager.rentals.dto.RentalResponseDTO;
 import com.fredfonseca.bookstoremanager.rentals.entity.Rental;
 import com.fredfonseca.bookstoremanager.rentals.exception.InvalidDateException;
 import com.fredfonseca.bookstoremanager.rentals.exception.RentAlreadyExistsException;
+import com.fredfonseca.bookstoremanager.rentals.exception.RentalNotFoundException;
 import com.fredfonseca.bookstoremanager.rentals.mapper.RentalMapper;
 import com.fredfonseca.bookstoremanager.rentals.repository.RentalRepository;
 import com.fredfonseca.bookstoremanager.users.entity.Users;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class RentalService {
@@ -52,6 +54,18 @@ public class RentalService {
             throw new InvalidDateException(rentToSave.getRentalDate(), rentToSave.getReturnForecast());
         }
         return rentalMapper.toDTO(savedRent);
+    }
+
+    public RentalResponseDTO findById(Long id) {
+        return rentalRepository.findById(id)
+                .map(rentalMapper::toDTO)
+                .orElseThrow(() -> new RentalNotFoundException(id));
+    }
+
+    public List<RentalResponseDTO> findAll() {
+        return rentalRepository.findAll().stream()
+                .map(rentalMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
     private void verifyIfExists(Book book, Users user) {
