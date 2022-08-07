@@ -36,4 +36,10 @@ public class RentalController implements RentalControllerDocs{
     public List<RentalResponseDTO> findAll() {
         return rentalService.findAll();
     }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id) {
+        rentalService.delete(id);
+    }
 }

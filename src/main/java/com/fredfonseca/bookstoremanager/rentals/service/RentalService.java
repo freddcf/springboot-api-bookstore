@@ -68,11 +68,21 @@ public class RentalService {
                 .collect(Collectors.toList());
     }
 
+    public void delete(Long id) {
+        verifyIfExists(id);
+        rentalRepository.deleteById(id);
+    }
+
     private void verifyIfExists(Book book, Users user) {
 
         List<Rental> duplicatedRent = rentalRepository
                 .findByBookAndUsers(book, user);
         if(!duplicatedRent.isEmpty()) throw new RentAlreadyExistsException(book.getName(), user.getName());
+    }
+
+    private Rental verifyIfExists(Long id) {
+        return rentalRepository.findById(id)
+                .orElseThrow(() -> new RentalNotFoundException(id));
     }
 
     private void validateRentDate() {

@@ -30,4 +30,11 @@ public interface RentalControllerDocs {
             @ApiResponse(code = 200, message = "Success rental list found")
     })
     List<RentalResponseDTO> findAll();
+
+    @ApiOperation(value = "Rental delete operation")
+    @ApiResponses(value = {
+            @ApiResponse(code = 202, message = "Success rent exclusion"),
+            @ApiResponse(code = 404, message = "Rental not found error")
+    })
+    void delete(Long id);
 }
