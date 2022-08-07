@@ -18,6 +18,8 @@ public class BookResponseDTO {
 
     private Integer quantity;
 
+    private Integer rentedQuantity;
+
     private LocalDate launchDate;
 
     private String author;
