@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/rentals")
@@ -24,5 +25,15 @@ public class RentalController implements RentalControllerDocs{
     @ResponseStatus(HttpStatus.CREATED)
     public RentalResponseDTO create(@RequestBody @Valid RentalRequestDTO rentalRequestDTO) {
         return rentalService.create(rentalRequestDTO);
+    }
+
+    @GetMapping("/{id}")
+    public RentalResponseDTO findById(@PathVariable Long id) {
+        return rentalService.findById(id);
+    }
+
+    @GetMapping
+    public List<RentalResponseDTO> findAll() {
+        return rentalService.findAll();
     }
 }
