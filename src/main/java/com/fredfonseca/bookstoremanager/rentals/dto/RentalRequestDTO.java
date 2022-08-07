@@ -17,18 +17,16 @@ public class RentalRequestDTO {
     private Long id;
 
     @NotNull
-    @NotEmpty
-    private String bookName;
+    private Long bookId;
 
     @NotNull
-    @NotEmpty
-    private String usersName;
+    private Long userId;
 
     @NotNull
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate rentalDate;
 
     @NotNull
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate returnForecast;
 }

@@ -1,10 +1,8 @@
 package com.fredfonseca.bookstoremanager.users.entity;
 
-import com.fredfonseca.bookstoremanager.rentals.entity.Rental;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Data
 @Entity
@@ -25,8 +23,5 @@ public class Users {
 
     @Column(nullable = false, length = 120)
     private String address;
-
-    @OneToMany(mappedBy = "users", fetch = FetchType.LAZY)
-    private List<Rental> rentals;
 }
 

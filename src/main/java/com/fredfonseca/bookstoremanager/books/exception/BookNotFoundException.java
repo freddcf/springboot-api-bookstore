@@ -6,4 +6,8 @@ public class BookNotFoundException extends EntityNotFoundException {
     public BookNotFoundException(Long id) {
         super(String.format("Book with id %s not exists!", id));
     }
+
+    public BookNotFoundException(String name) {
+        super(String.format("Book with name %s not exists!", name));
+    }
 }
