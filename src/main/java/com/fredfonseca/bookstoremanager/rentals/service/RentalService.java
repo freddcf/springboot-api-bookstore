@@ -36,7 +36,7 @@ public class RentalService {
         this.userService = userService;
     }
 
-    public RentalResponseDTO create(RentalRequestDTO rentalRequestDTO) throws InvalidDateException {
+    public RentalResponseDTO create(RentalRequestDTO rentalRequestDTO) {
         Users foundUser = userService.verifyAndGetIfExists(rentalRequestDTO.getUserId());
         Book foundBook = bookService.verifyAndGetIfExists(rentalRequestDTO.getBookId());
 
@@ -71,6 +71,27 @@ public class RentalService {
     public void delete(Long id) {
         verifyIfExists(id);
         rentalRepository.deleteById(id);
+    }
+
+    public RentalResponseDTO update(Long id, RentalRequestDTO rentalRequestDTO) {
+        Rental foundRental = verifyIfExists(id);
+
+        Users foundUser = userService.verifyAndGetIfExists(rentalRequestDTO.getUserId());
+        Book foundBook = bookService.verifyAndGetIfExists(rentalRequestDTO.getBookId());
+
+        Rental rentToSave = rentalMapper.toModel(rentalRequestDTO);
+        rentToSave.setId(id);
+        rentToSave.setBook(foundBook);
+        rentToSave.setUsers(foundUser);
+
+        Rental savedRent = null;
+
+        if(rentToSave.getRentalDate().isBefore(rentToSave.getReturnForecast())){
+            savedRent = rentalRepository.save(rentToSave);
+        } else {
+            throw new InvalidDateException(rentToSave.getRentalDate(), rentToSave.getReturnForecast());
+        }
+        return rentalMapper.toDTO(savedRent);
     }
 
     private void verifyIfExists(Book book, Users user) {

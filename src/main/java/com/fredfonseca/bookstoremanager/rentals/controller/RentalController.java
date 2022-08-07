@@ -42,4 +42,9 @@ public class RentalController implements RentalControllerDocs{
     public void delete(@PathVariable Long id) {
         rentalService.delete(id);
     }
+
+    @PutMapping("/{id}")
+    public RentalResponseDTO update(@PathVariable Long id, @RequestBody @Valid RentalRequestDTO rentalRequestDTO) {
+        return rentalService.update(id, rentalRequestDTO);
+    }
 }

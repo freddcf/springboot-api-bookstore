@@ -37,4 +37,11 @@ public interface RentalControllerDocs {
             @ApiResponse(code = 404, message = "Rental not found error")
     })
     void delete(Long id);
+
+    @ApiOperation(value = "Rental update operation")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success rent updated"),
+            @ApiResponse(code = 400, message = "Missing required field, or an error on validation field rules")
+    })
+    RentalResponseDTO update(Long id, RentalRequestDTO rentalRequestDTO);
 }
