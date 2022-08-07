@@ -9,7 +9,6 @@ import com.fredfonseca.bookstoremanager.books.mapper.BookMapper;
 import com.fredfonseca.bookstoremanager.books.repository.BookRepository;
 import com.fredfonseca.bookstoremanager.publishers.entity.Publisher;
 import com.fredfonseca.bookstoremanager.publishers.service.PublisherService;
-import com.fredfonseca.bookstoremanager.users.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,14 +23,11 @@ public class BookService {
 
     private BookRepository bookRepository;
 
-    private UserService userService;
-
     private PublisherService publisherService;
 
     @Autowired
-    public BookService(BookRepository bookRepository, UserService userService, PublisherService publisherService) {
+    public BookService(BookRepository bookRepository, PublisherService publisherService) {
         this.bookRepository = bookRepository;
-        this.userService = userService;
         this.publisherService = publisherService;
     }
 
@@ -59,12 +55,12 @@ public class BookService {
     }
 
     public void delete(Long id) {
-        verifyAndGetBook(id);
+        verifyAndGetIfExists(id);
         bookRepository.deleteById(id);
     }
 
     public BookResponseDTO update(Long id, BookRequestDTO bookRequestDTO) {
-        Book foundBook = verifyAndGetBook(id);
+        Book foundBook = verifyAndGetIfExists(id);
         Publisher foundPublisher = publisherService.verifyAndGetIfExists(bookRequestDTO.getPublisherName());
 
         Book bookToUpdate = bookMapper.toModel(bookRequestDTO);
@@ -75,7 +71,7 @@ public class BookService {
         return bookMapper.toDTO(updatedBook);
     }
 
-    private Book verifyAndGetBook(Long id) {
+    public Book verifyAndGetIfExists(Long id) {
         return bookRepository.findById(id)
                 .orElseThrow(() -> new BookNotFoundException(id));
     }

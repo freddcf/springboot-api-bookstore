@@ -15,7 +15,7 @@ public interface BookControllerDocs {
     @ApiOperation(value = "Book creation operation")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Success book creation"),
-            @ApiResponse(code = 400, message = "Missing required fields, wrong field range value or author already registered on system")
+            @ApiResponse(code = 400, message = "Missing required fields, wrong field range value or book already registered on system")
     })
     BookResponseDTO create(BookRequestDTO bookRequestDTO);
 

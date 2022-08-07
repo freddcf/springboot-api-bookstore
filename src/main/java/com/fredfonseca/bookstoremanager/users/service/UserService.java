@@ -60,7 +60,7 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    private Users verifyAndGetIfExists(Long id) {
+    public Users verifyAndGetIfExists(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
     }
