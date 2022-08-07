@@ -14,7 +14,7 @@ public interface UserControllerDocs {
     @ApiOperation(value = "User creation operation")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Success user creation"),
-            @ApiResponse(code = 400, message = "Missing required field, or an error on validation field rules")
+            @ApiResponse(code = 400, message = "Missing required fields, wrong field range value or user already registered on system")
     })
     UserDTO create(UserDTO userToCreateDTO);
 

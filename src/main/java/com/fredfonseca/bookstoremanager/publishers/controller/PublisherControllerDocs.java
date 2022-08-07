@@ -14,7 +14,7 @@ public interface PublisherControllerDocs {
     @ApiOperation(value = "Publisher creation operation")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Success publisher creation"),
-            @ApiResponse(code = 400, message = "Missing required fields, wrong field range value or author already registered on system")
+            @ApiResponse(code = 400, message = "Missing required fields, wrong field range value or publisher already registered on system")
     })
     PublisherDTO create(PublisherDTO publisherDTO);
 
@@ -41,7 +41,7 @@ public interface PublisherControllerDocs {
     @ApiOperation(value = "Publisher update operation")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Success publisher update"),
-            @ApiResponse(code = 400, message = "Missing required fields, wrong field range value or author already registered on system")
+            @ApiResponse(code = 400, message = "Missing required field, or an error on validation field rules")
     })
     PublisherDTO update(Long id, PublisherDTO publisherDTO);
 }

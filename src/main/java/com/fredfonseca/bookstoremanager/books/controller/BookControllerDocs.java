@@ -28,7 +28,7 @@ public interface BookControllerDocs {
 
     @ApiOperation(value = "List all books operation")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Success book list found"),
+            @ApiResponse(code = 200, message = "Success book list found")
     })
     List<BookResponseDTO> findAll();
 
