@@ -1,6 +1,7 @@
 package com.fredfonseca.bookstoremanager.rentals.controller;
 
 import com.fredfonseca.bookstoremanager.rentals.dto.RentalRequestDTO;
+import com.fredfonseca.bookstoremanager.rentals.dto.RentalRequestUpdateDTO;
 import com.fredfonseca.bookstoremanager.rentals.dto.RentalResponseDTO;
 import com.fredfonseca.bookstoremanager.rentals.service.RentalService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +45,7 @@ public class RentalController implements RentalControllerDocs{
     }
 
     @PutMapping("/{id}")
-    public RentalResponseDTO update(@PathVariable Long id, @RequestBody @Valid RentalRequestDTO rentalRequestDTO) {
-        return rentalService.update(id, rentalRequestDTO);
+    public RentalResponseDTO update(@PathVariable Long id, @RequestBody @Valid RentalRequestUpdateDTO rentalRequestUpdateDTO) {
+        return rentalService.update(id, rentalRequestUpdateDTO);
     }
 }
