@@ -22,7 +22,7 @@ public class Rental {
     private LocalDate returnForecast;
 
     @Column
-    private String returnDate = "Não devolvido";
+    private String returnDate;
 
     @ManyToOne(cascade = {CascadeType.MERGE})
     private Book book;
