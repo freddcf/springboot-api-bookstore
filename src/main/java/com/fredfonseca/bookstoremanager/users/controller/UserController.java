@@ -1,7 +1,6 @@
 package com.fredfonseca.bookstoremanager.users.controller;
 
 import com.fredfonseca.bookstoremanager.users.dto.UserDTO;
-import com.fredfonseca.bookstoremanager.users.dto.UserDTO;
 import com.fredfonseca.bookstoremanager.users.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

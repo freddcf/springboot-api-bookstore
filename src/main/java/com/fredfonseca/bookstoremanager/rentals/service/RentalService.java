@@ -87,9 +87,8 @@ public class RentalService {
     public RentalResponseDTO update(Long id, RentalRequestDTO rentalRequestDTO) {
         Rental foundRental = verifyIfExists(id);
 
-        String rentStatus = validateReturnDate(rentalRequestDTO, foundRental);
         Rental rentToSave = foundRental;
-        rentToSave.setReturnDate(rentStatus);
+        rentToSave.setReturnDate(validateReturnDate(rentalRequestDTO, foundRental));
 
         Rental savedRent = rentalRepository.save(rentToSave);
         return rentalMapper.toDTO(savedRent);
@@ -106,9 +105,9 @@ public class RentalService {
         if(returnDate.isBefore(rentalDate))
             throw new InvalidReturnDateException(rentalDate, returnDate);
 
-        if(returnDate.isBefore(returnForecast)) rentStatus = returnDate.toString() + " (No prazo)";
-        if(returnDate.isAfter(returnForecast)) rentStatus = returnDate.toString() + " (Com atraso)";
-        if(returnDate.isEqual(returnForecast)) rentStatus = returnDate.toString() + " (No prazo)";
+        if(returnDate.isBefore(returnForecast)) rentStatus = returnDate + " (No prazo)";
+        if(returnDate.isAfter(returnForecast)) rentStatus = returnDate + " (Com atraso)";
+        if(returnDate.isEqual(returnForecast)) rentStatus = returnDate + " (No prazo)";
         return rentStatus;
     }
 
