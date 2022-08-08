@@ -1,6 +1,7 @@
 package com.fredfonseca.bookstoremanager.rentals.controller;
 
 import com.fredfonseca.bookstoremanager.rentals.dto.RentalRequestDTO;
+import com.fredfonseca.bookstoremanager.rentals.dto.RentalRequestUpdateDTO;
 import com.fredfonseca.bookstoremanager.rentals.dto.RentalResponseDTO;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -42,5 +43,5 @@ public interface RentalControllerDocs {
             @ApiResponse(code = 200, message = "Success rent updated"),
             @ApiResponse(code = 400, message = "Missing required field, or an error on validation field rules")
     })
-    RentalResponseDTO update(Long id, RentalRequestDTO rentalRequestDTO);
+    RentalResponseDTO update(Long id, RentalRequestUpdateDTO rentalRequestUpdateDTO);
 }

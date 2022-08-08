@@ -6,6 +6,6 @@ import java.time.LocalDate;
 
 public class InvalidReturnDateException extends EntityExistsException {
     public InvalidReturnDateException(LocalDate rentalDate, LocalDate returnDate) {
-        super(String.format("Return date %s should not be before rental date %s!", rentalDate, returnDate));
+        super(String.format("Return date %s should not be before rental date %s!", returnDate, rentalDate));
     }
 }

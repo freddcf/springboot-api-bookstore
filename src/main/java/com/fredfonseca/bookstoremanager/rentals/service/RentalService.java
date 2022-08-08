@@ -3,6 +3,7 @@ package com.fredfonseca.bookstoremanager.rentals.service;
 import com.fredfonseca.bookstoremanager.books.entity.Book;
 import com.fredfonseca.bookstoremanager.books.service.BookService;
 import com.fredfonseca.bookstoremanager.rentals.dto.RentalRequestDTO;
+import com.fredfonseca.bookstoremanager.rentals.dto.RentalRequestUpdateDTO;
 import com.fredfonseca.bookstoremanager.rentals.dto.RentalResponseDTO;
 import com.fredfonseca.bookstoremanager.rentals.entity.Rental;
 import com.fredfonseca.bookstoremanager.rentals.exception.*;
@@ -84,23 +85,21 @@ public class RentalService {
         rentalRepository.deleteById(id);
     }
 
-    public RentalResponseDTO update(Long id, RentalRequestDTO rentalRequestDTO) {
+    public RentalResponseDTO update(Long id, RentalRequestUpdateDTO rentalRequestUpdateDTO) {
         Rental foundRental = verifyIfExists(id);
 
         Rental rentToSave = foundRental;
-        rentToSave.setReturnDate(validateReturnDate(rentalRequestDTO, foundRental));
+        rentToSave.setReturnDate(validateReturnDate(rentalRequestUpdateDTO, foundRental));
 
         Rental savedRent = rentalRepository.save(rentToSave);
         return rentalMapper.toDTO(savedRent);
     }
 
-    private String validateReturnDate(RentalRequestDTO rentalRequestDTO, Rental foundRental) {
+    private String validateReturnDate(RentalRequestUpdateDTO rentalRequestUpdateDTO, Rental foundRental) {
         String rentStatus = "";
-        LocalDate returnDate = rentalRequestDTO.getReturnDate();
+        LocalDate returnDate = rentalRequestUpdateDTO.getReturnDate();
         LocalDate rentalDate = foundRental.getRentalDate();
         LocalDate returnForecast = foundRental.getReturnForecast();
-
-        if(rentalRequestDTO.getReturnDate() == null) throw new EmptyReturnDateException();
 
         if(returnDate.isBefore(rentalDate))
             throw new InvalidReturnDateException(rentalDate, returnDate);
