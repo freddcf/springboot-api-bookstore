@@ -1,7 +1,9 @@
 package com.fredfonseca.bookstoremanager.users.service;
 
+import com.fredfonseca.bookstoremanager.rentals.repository.RentalRepository;
 import com.fredfonseca.bookstoremanager.users.dto.UserDTO;
 import com.fredfonseca.bookstoremanager.users.entity.Users;
+import com.fredfonseca.bookstoremanager.users.exception.DeleteDeniedException;
 import com.fredfonseca.bookstoremanager.users.exception.UserAlreadyExistsException;
 import com.fredfonseca.bookstoremanager.users.exception.UserNotFoundException;
 import com.fredfonseca.bookstoremanager.users.mapper.UserMapper;
@@ -20,9 +22,12 @@ public class UserService {
 
     private UserRepository userRepository;
 
+    private RentalRepository rentalRepository;
+
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository,RentalRepository rentalRepository) {
         this.userRepository = userRepository;
+        this.rentalRepository = rentalRepository;
     }
 
     public UserDTO create(UserDTO userToCreateDTO) {
@@ -44,7 +49,8 @@ public class UserService {
     }
 
     public void delete(Long id) {
-        verifyAndGetIfExists(id);
+        Users userToDelete = verifyAndGetIfExists(id);
+        if(rentalRepository.findByUsers(userToDelete).isPresent()) throw new DeleteDeniedException();
         userRepository.deleteById(id);
     }
 
