@@ -34,6 +34,5 @@ public class BookRequestDTO {
     private String author;
 
     @NotNull
-    @NotEmpty
-    private String publisherName;
+    private Long publisherId;
 }

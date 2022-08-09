@@ -6,6 +6,7 @@ import com.fredfonseca.bookstoremanager.books.entity.Book;
 import com.fredfonseca.bookstoremanager.books.exception.DeleteDeniedException;
 import com.fredfonseca.bookstoremanager.books.exception.BookAlreadyExistsException;
 import com.fredfonseca.bookstoremanager.books.exception.BookNotFoundException;
+import com.fredfonseca.bookstoremanager.books.exception.InvalidDateException;
 import com.fredfonseca.bookstoremanager.books.mapper.BookMapper;
 import com.fredfonseca.bookstoremanager.books.repository.BookRepository;
 import com.fredfonseca.bookstoremanager.publishers.entity.Publisher;
@@ -14,6 +15,13 @@ import com.fredfonseca.bookstoremanager.rentals.repository.RentalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.DateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.chrono.ChronoLocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -38,7 +46,8 @@ public class BookService {
 
     public BookResponseDTO create(BookRequestDTO bookRequestDTO) {
         verifyIfExists(bookRequestDTO.getName());
-        Publisher foundPublisher = publisherService.verifyAndGetIfExists(bookRequestDTO.getPublisherName());
+        Publisher foundPublisher = publisherService.verifyAndGetIfExists(bookRequestDTO.getPublisherId());
+        validateDate(bookRequestDTO);
 
         Book bookToSave = bookMapper.toModel(bookRequestDTO);
         bookToSave.setPublisher(foundPublisher);
@@ -67,7 +76,8 @@ public class BookService {
 
     public BookResponseDTO update(Long id, BookRequestDTO bookRequestDTO) {
         Book foundBook = verifyAndGetIfExists(id);
-        Publisher foundPublisher = publisherService.verifyAndGetIfExists(bookRequestDTO.getPublisherName());
+        Publisher foundPublisher = publisherService.verifyAndGetIfExists(bookRequestDTO.getPublisherId());
+        validateDate(bookRequestDTO);
 
         Book bookToUpdate = bookMapper.toModel(bookRequestDTO);
         bookToUpdate.setId(id);
@@ -86,5 +96,11 @@ public class BookService {
         Optional<Book> duplicatedBook = bookRepository
                 .findByName(name);
         if(duplicatedBook.isPresent()) throw new BookAlreadyExistsException(name);
+    }
+
+    private void validateDate(BookRequestDTO bookRequestDTO) {
+        LocalDate today = LocalDate.now();
+        if(bookRequestDTO.getLaunchDate().isAfter(today))
+            throw new InvalidDateException();
     }
 }

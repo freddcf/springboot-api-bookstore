@@ -51,11 +51,7 @@ public class RentalService {
         Rental savedRent = rentToSave;
         Book alterBook = rentToSave.getBook();
 
-        if(!(rentToSave.getRentalDate().isBefore(rentToSave.getReturnForecast())))
-            throw new InvalidDateException(rentToSave.getRentalDate(), rentToSave.getReturnForecast());
-
-        if(savedRent.getBook().getQuantity() <= 0)
-            throw new InvalidBookQuantity(savedRent.getBook().getName());
+        validateDate(rentalRequestDTO, rentToSave, savedRent);
 
         alterBook.setQuantity(alterBook.getQuantity() - 1);
         alterBook.setRentedQuantity(alterBook.getRentedQuantity() + 1);
@@ -120,5 +116,17 @@ public class RentalService {
     private Rental verifyIfExists(Long id) {
         return rentalRepository.findById(id)
                 .orElseThrow(() -> new RentalNotFoundException(id));
+    }
+
+    private void validateDate(RentalRequestDTO rentalRequestDTO, Rental rentToSave, Rental savedRent) {
+        LocalDate today = LocalDate.now();
+        if(rentalRequestDTO.getRentalDate().isAfter(today))
+            throw new InvalidFutureDateException();
+
+        if(!(rentToSave.getRentalDate().isBefore(rentToSave.getReturnForecast())))
+            throw new InvalidDateException();
+
+        if(savedRent.getBook().getQuantity() <= 0)
+            throw new InvalidBookQuantity(savedRent.getBook().getName());
     }
 }

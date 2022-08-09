@@ -90,8 +90,8 @@ public class PublisherService {
                 .orElseThrow(() -> new PublisherNotFoundException(id));
     }
 
-    public Publisher verifyAndGetIfExists(String name) {
-        return publisherRepository.findByName(name)
-                .orElseThrow(() -> new PublisherNotFoundException(name));
+    public Publisher verifyAndGetIfExists(Long id) {
+        return publisherRepository.findById(id)
+                .orElseThrow(() -> new PublisherNotFoundException(id));
     }
 }
