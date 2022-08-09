@@ -67,7 +67,7 @@ public class BookstoreExceptionHandler extends ResponseEntityExceptionHandler {
             HttpMessageNotReadableException exception, HttpHeaders headers,
             HttpStatus status, WebRequest request) {
         return buildResponseEntity(
-                HttpStatus.BAD_REQUEST, "Malformated JSON body and/or field error",
+                HttpStatus.BAD_REQUEST, "Malformated JSON body and/or field error. Please check it again!",
                 Collections.singletonList(exception.getLocalizedMessage()));
     }
 

@@ -3,12 +3,14 @@ package com.fredfonseca.bookstoremanager.books.service;
 import com.fredfonseca.bookstoremanager.books.dto.BookRequestDTO;
 import com.fredfonseca.bookstoremanager.books.dto.BookResponseDTO;
 import com.fredfonseca.bookstoremanager.books.entity.Book;
+import com.fredfonseca.bookstoremanager.books.exception.DeleteDeniedException;
 import com.fredfonseca.bookstoremanager.books.exception.BookAlreadyExistsException;
 import com.fredfonseca.bookstoremanager.books.exception.BookNotFoundException;
 import com.fredfonseca.bookstoremanager.books.mapper.BookMapper;
 import com.fredfonseca.bookstoremanager.books.repository.BookRepository;
 import com.fredfonseca.bookstoremanager.publishers.entity.Publisher;
 import com.fredfonseca.bookstoremanager.publishers.service.PublisherService;
+import com.fredfonseca.bookstoremanager.rentals.repository.RentalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,10 +27,13 @@ public class BookService {
 
     private PublisherService publisherService;
 
+    private RentalRepository rentalRepository;
+
     @Autowired
-    public BookService(BookRepository bookRepository, PublisherService publisherService) {
+    public BookService(BookRepository bookRepository, PublisherService publisherService, RentalRepository rentalRepository) {
         this.bookRepository = bookRepository;
         this.publisherService = publisherService;
+        this.rentalRepository = rentalRepository;
     }
 
     public BookResponseDTO create(BookRequestDTO bookRequestDTO) {
@@ -55,7 +60,8 @@ public class BookService {
     }
 
     public void delete(Long id) {
-        verifyAndGetIfExists(id);
+        Book bookToDelete = verifyAndGetIfExists(id);
+        if(rentalRepository.findByBook(bookToDelete).isPresent()) throw new DeleteDeniedException();
         bookRepository.deleteById(id);
     }
 

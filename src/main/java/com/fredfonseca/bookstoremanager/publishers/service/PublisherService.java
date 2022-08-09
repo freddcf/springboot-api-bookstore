@@ -1,7 +1,9 @@
 package com.fredfonseca.bookstoremanager.publishers.service;
 
+import com.fredfonseca.bookstoremanager.books.repository.BookRepository;
 import com.fredfonseca.bookstoremanager.publishers.dto.PublisherDTO;
 import com.fredfonseca.bookstoremanager.publishers.entity.Publisher;
+import com.fredfonseca.bookstoremanager.publishers.exception.DeleteDeniedException;
 import com.fredfonseca.bookstoremanager.publishers.exception.PublisherAlreadyExistsException;
 import com.fredfonseca.bookstoremanager.publishers.exception.PublisherNotFoundException;
 import com.fredfonseca.bookstoremanager.publishers.mapper.PublisherMapper;
@@ -20,9 +22,12 @@ public class PublisherService {
 
     private PublisherRepository publisherRepository;
 
+    private BookRepository bookRepository;
+
     @Autowired
-    public PublisherService(PublisherRepository publisherRepository) {
+    public PublisherService(PublisherRepository publisherRepository, BookRepository bookRepository) {
         this.publisherRepository = publisherRepository;
+        this.bookRepository = bookRepository;
     }
 
     public PublisherDTO create(PublisherDTO publisherDTO) {
@@ -47,7 +52,8 @@ public class PublisherService {
     }
 
     public void delete(Long id) {
-        verifyAndGetPublisher(id);
+        Publisher publisherToDelete = verifyAndGetPublisher(id);
+        if(bookRepository.findByPublisher(publisherToDelete).isPresent()) throw new DeleteDeniedException();
         publisherRepository.deleteById(id);
     }
 
