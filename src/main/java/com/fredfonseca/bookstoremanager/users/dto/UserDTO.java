@@ -37,6 +37,14 @@ public class UserDTO {
     @NotEmpty
     private String address;
 
+    @NotNull
+    @NotEmpty
+    private String username;
+
+    @NotNull
+    @NotEmpty
+    private String password;
+
     @Enumerated(EnumType.STRING)
     @NotNull
     private Role role;
