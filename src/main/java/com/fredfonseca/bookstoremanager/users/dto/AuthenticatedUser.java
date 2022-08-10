@@ -24,7 +24,7 @@ public class AuthenticatedUser implements UserDetails {
 
     @Override
     public String getPassword() {
-        return null;
+        return password;
     }
 
     @Override
@@ -49,6 +49,6 @@ public class AuthenticatedUser implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true ;
+        return true;
     }
 }
