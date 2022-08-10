@@ -23,5 +23,11 @@ public class Users {
 
     @Column(nullable = false, length = 120)
     private String address;
+
+    @Column(nullable = false, unique = true, length = 30)
+    private String username;
+
+    @Column(nullable = false, unique = true)
+    private String password;
 }
 

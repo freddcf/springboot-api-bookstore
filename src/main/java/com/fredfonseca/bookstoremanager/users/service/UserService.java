@@ -9,6 +9,7 @@ import com.fredfonseca.bookstoremanager.users.exception.UserNotFoundException;
 import com.fredfonseca.bookstoremanager.users.mapper.UserMapper;
 import com.fredfonseca.bookstoremanager.users.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,15 +25,19 @@ public class UserService {
 
     private RentalRepository rentalRepository;
 
+    private PasswordEncoder passwordEncoder;
+
     @Autowired
-    public UserService(UserRepository userRepository,RentalRepository rentalRepository) {
+    public UserService(UserRepository userRepository,RentalRepository rentalRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.rentalRepository = rentalRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public UserDTO create(UserDTO userToCreateDTO) {
         verifyIfExists(userToCreateDTO.getEmail());
         Users userToCreate = userMapper.toModel(userToCreateDTO);
+        userToCreate.setPassword(passwordEncoder.encode(userToCreate.getPassword()));
 
         Users createdUser = userRepository.save(userToCreate);
         return userMapper.toDTO(createdUser);
@@ -43,6 +48,7 @@ public class UserService {
 
         userToUpdateDTO.setId(foundUser.getId());
         Users userToUpdate = userMapper.toModel(userToUpdateDTO);
+        userToUpdate.setPassword(passwordEncoder.encode(userToUpdate.getPassword()));
 
         Users updatedUser = userRepository.save(userToUpdate);
         return userMapper.toDTO(updatedUser);
