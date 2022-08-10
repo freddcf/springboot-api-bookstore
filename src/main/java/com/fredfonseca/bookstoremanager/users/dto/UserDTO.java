@@ -1,9 +1,12 @@
 package com.fredfonseca.bookstoremanager.users.dto;
 
+import com.fredfonseca.bookstoremanager.users.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -33,4 +36,8 @@ public class UserDTO {
     @NotNull
     @NotEmpty
     private String address;
+
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    private Role role;
 }
