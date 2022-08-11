@@ -1,5 +1,6 @@
 package com.fredfonseca.bookstoremanager.users.controller;
 
+import com.fredfonseca.bookstoremanager.users.dto.MessageDTO;
 import com.fredfonseca.bookstoremanager.users.dto.UserDTO;
 import com.fredfonseca.bookstoremanager.users.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ public class UserController implements UserControllerDocs{
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UserDTO create(@RequestBody @Valid UserDTO userToCreateDTO) {
+    public MessageDTO create(@RequestBody @Valid UserDTO userToCreateDTO) {
         return userService.create(userToCreateDTO);
     }
 
@@ -34,7 +35,7 @@ public class UserController implements UserControllerDocs{
     }
 
     @PutMapping("/{id}")
-    public UserDTO update(@PathVariable Long id, @RequestBody @Valid UserDTO userToUpdateDTO) {
+    public MessageDTO update(@PathVariable Long id, @RequestBody @Valid UserDTO userToUpdateDTO) {
         return userService.update(id, userToUpdateDTO);
     }
 

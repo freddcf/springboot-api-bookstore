@@ -1,6 +1,7 @@
 package com.fredfonseca.bookstoremanager.users.service;
 
 import com.fredfonseca.bookstoremanager.rentals.repository.RentalRepository;
+import com.fredfonseca.bookstoremanager.users.dto.MessageDTO;
 import com.fredfonseca.bookstoremanager.users.dto.UserDTO;
 import com.fredfonseca.bookstoremanager.users.entity.Users;
 import com.fredfonseca.bookstoremanager.users.exception.DeleteDeniedException;
@@ -15,6 +16,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static com.fredfonseca.bookstoremanager.users.utils.MessageDTOUtils.creationMessage;
+import static com.fredfonseca.bookstoremanager.users.utils.MessageDTOUtils.updatedMessage;
 
 @Service
 public class UserService {
@@ -34,16 +38,16 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public UserDTO create(UserDTO userToCreateDTO) {
-        verifyIfExists(userToCreateDTO.getEmail());
+    public MessageDTO create(UserDTO userToCreateDTO) {
+        verifyIfExists(userToCreateDTO.getEmail(), userToCreateDTO.getUsername());
         Users userToCreate = userMapper.toModel(userToCreateDTO);
         userToCreate.setPassword(passwordEncoder.encode(userToCreate.getPassword()));
 
         Users createdUser = userRepository.save(userToCreate);
-        return userMapper.toDTO(createdUser);
+        return creationMessage(createdUser);
     }
 
-    public UserDTO update(Long id, UserDTO userToUpdateDTO) {
+    public MessageDTO update(Long id, UserDTO userToUpdateDTO) {
         Users foundUser = verifyAndGetIfExists(id);
 
         userToUpdateDTO.setId(foundUser.getId());
@@ -51,7 +55,7 @@ public class UserService {
         userToUpdate.setPassword(passwordEncoder.encode(userToUpdate.getPassword()));
 
         Users updatedUser = userRepository.save(userToUpdate);
-        return userMapper.toDTO(updatedUser);
+        return updatedMessage(updatedUser);
     }
 
     public void delete(Long id) {
@@ -77,9 +81,14 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException(id));
     }
 
-    private void verifyIfExists(String email) {
-        Optional<Users> foundUser = userRepository.findByEmail(email);
-        if(foundUser.isPresent()) throw new UserAlreadyExistsException(email);
+//    private void verifyIfExists(String email) {
+//        Optional<Users> foundUser = userRepository.findByEmail(email);
+//        if(foundUser.isPresent()) throw new UserAlreadyExistsException(email);
+//    }
+
+    private void verifyIfExists(String email, String username) {
+        Optional<Users> foundUser = userRepository.findByEmailOrUsername(email, username);
+        if (foundUser.isPresent()) throw new UserAlreadyExistsException(email, username);
     }
 
 }
