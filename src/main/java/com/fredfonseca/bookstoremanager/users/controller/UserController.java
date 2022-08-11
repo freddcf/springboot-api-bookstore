@@ -22,13 +22,11 @@ public class UserController implements UserControllerDocs{
 
     private AuthenticationService authenticationService;
 
+    @Autowired
     public UserController(UserService userService, AuthenticationService authenticationService) {
         this.userService = userService;
         this.authenticationService = authenticationService;
     }
-
-    @Autowired
-
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
