@@ -1,7 +1,10 @@
 package com.fredfonseca.bookstoremanager.users.controller;
 
+import com.fredfonseca.bookstoremanager.users.dto.JwtRequest;
+import com.fredfonseca.bookstoremanager.users.dto.JwtResponse;
 import com.fredfonseca.bookstoremanager.users.dto.MessageDTO;
 import com.fredfonseca.bookstoremanager.users.dto.UserDTO;
+import com.fredfonseca.bookstoremanager.users.service.AuthenticationService;
 import com.fredfonseca.bookstoremanager.users.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,10 +20,15 @@ public class UserController implements UserControllerDocs{
 
     private UserService userService;
 
-    @Autowired
-    public UserController(UserService userService) {
+    private AuthenticationService authenticationService;
+
+    public UserController(UserService userService, AuthenticationService authenticationService) {
         this.userService = userService;
+        this.authenticationService = authenticationService;
     }
+
+    @Autowired
+
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -47,5 +55,10 @@ public class UserController implements UserControllerDocs{
     @GetMapping
     public List<UserDTO> findAll() {
         return userService.findAll();
+    }
+
+    @PostMapping("/authenticate")
+    public JwtResponse createAuthenticationToken(@RequestBody @Valid JwtRequest jwtRequest) {
+        return authenticationService.createAuthenticationToken(jwtRequest);
     }
 }

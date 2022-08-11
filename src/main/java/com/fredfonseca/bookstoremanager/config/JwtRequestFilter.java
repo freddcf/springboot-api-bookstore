@@ -22,26 +22,25 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     @Autowired
     private AuthenticationService authenticationService;
 
+    @Autowired
     private JwtTokenManager jwtTokenManager;
 
-    @Autowired
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         var username = "";
         var jwtToken = "";
 
         var requestTokenHeader = request.getHeader("Authorization");
-        if(isTokenPresent(requestTokenHeader)) {
+        if (isTokenPresent(requestTokenHeader)) {
             jwtToken = requestTokenHeader.substring(7);
             username = jwtTokenManager.getUsernameFromToken(jwtToken);
         } else {
             logger.warn("JWT Token does not begin with Bearer String");
         }
 
-        if(isUsernameInContext(username)) {
+        if (isUsernameInContext(username)) {
             addUsernameInContext(request, username, jwtToken);
         }
-
         filterChain.doFilter(request, response);
     }
 
@@ -50,12 +49,12 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     }
 
     private boolean isUsernameInContext(String username) {
-        return username != null && SecurityContextHolder.getContext().getAuthentication() == null;
+        return !username.isEmpty() && SecurityContextHolder.getContext().getAuthentication() == null;
     }
 
     private void addUsernameInContext(HttpServletRequest request, String username, String jwtToken) {
         UserDetails userDetails = authenticationService.loadUserByUsername(username);
-        if(jwtTokenManager.validateToken(jwtToken, userDetails)) {
+        if (jwtTokenManager.validateToken(jwtToken, userDetails)) {
             UsernamePasswordAuthenticationToken authenticationToken =
                     new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
