@@ -55,7 +55,7 @@ public class UserController implements UserControllerDocs{
         return userService.findAll();
     }
 
-    @PostMapping("/authenticate")
+    @PostMapping(value = "/authenticate")
     public JwtResponse createAuthenticationToken(@RequestBody @Valid JwtRequest jwtRequest) {
         return authenticationService.createAuthenticationToken(jwtRequest);
     }

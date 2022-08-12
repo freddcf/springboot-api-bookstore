@@ -19,11 +19,14 @@ import java.io.IOException;
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
 
-    @Autowired
     private AuthenticationService authenticationService;
+    private JwtTokenManager jwtTokenManager;
 
     @Autowired
-    private JwtTokenManager jwtTokenManager;
+    public JwtRequestFilter(AuthenticationService authenticationService, JwtTokenManager jwtTokenManager) {
+        this.authenticationService = authenticationService;
+        this.jwtTokenManager = jwtTokenManager;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {

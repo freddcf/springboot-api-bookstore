@@ -6,8 +6,10 @@ import com.fredfonseca.bookstoremanager.users.dto.JwtResponse;
 import com.fredfonseca.bookstoremanager.users.entity.Users;
 import com.fredfonseca.bookstoremanager.users.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -16,14 +18,17 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthenticationService implements UserDetailsService {
 
-    @Autowired
     private UserRepository userRepository;
-
-    @Autowired
     private AuthenticationManager authenticationManager;
+    private JwtTokenManager jwtTokenManager;
 
     @Autowired
-    private JwtTokenManager jwtTokenManager;
+    @Lazy
+    public AuthenticationService(UserRepository userRepository, AuthenticationManager authenticationManager, JwtTokenManager jwtTokenManager) {
+        this.userRepository = userRepository;
+        this.authenticationManager = authenticationManager;
+        this.jwtTokenManager = jwtTokenManager;
+    }
 
     public JwtResponse createAuthenticationToken(JwtRequest jwtRequest) {
         String username = jwtRequest.getUsername();
@@ -37,8 +42,8 @@ public class AuthenticationService implements UserDetailsService {
                 .build();
     }
 
-    private void authenticate(String username, String password) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+    private Authentication authenticate(String username, String password) {
+        return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
     }
 
     @Override
