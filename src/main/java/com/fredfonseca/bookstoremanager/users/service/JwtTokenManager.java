@@ -5,6 +5,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -47,16 +48,15 @@ public class JwtTokenManager {
     }
 
     private <T> T getClaimForToken(String token, Function<Claims, T> claimsResolver) {
-        Claims claims = getClaimsForToken(token);
+        Claims claims = getAllClaimsForToken(token);
         return claimsResolver.apply(claims);
     }
 
-    private Claims getClaimsForToken(String token) {
-        Claims claims = Jwts.parser()
+    private Claims getAllClaimsForToken(String token) {
+        return Jwts.parser()
                 .setSigningKey(secret)
                 .parseClaimsJws(token)
                 .getBody();
-        return claims;
     }
 
     public boolean validateToken(String token, UserDetails userDetails) {
