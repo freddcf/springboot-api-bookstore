@@ -49,6 +49,7 @@ public class UserService {
 
     public MessageDTO update(Long id, UserDTO userToUpdateDTO) {
         Users foundUser = verifyAndGetIfExists(id);
+        verifyIfExists(userToUpdateDTO.getEmail(), userToUpdateDTO.getUsername());
 
         userToUpdateDTO.setId(foundUser.getId());
         Users userToUpdate = userMapper.toModel(userToUpdateDTO);
@@ -81,14 +82,10 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException(id));
     }
 
-//    private void verifyIfExists(String email) {
-//        Optional<Users> foundUser = userRepository.findByEmail(email);
-//        if(foundUser.isPresent()) throw new UserAlreadyExistsException(email);
-//    }
-
     private void verifyIfExists(String email, String username) {
-        Optional<Users> foundUser = userRepository.findByEmailOrUsername(email, username);
-        if (foundUser.isPresent()) throw new UserAlreadyExistsException(email, username);
+        Optional<Users> foundUserWithEmail = userRepository.findByEmail(email);
+        Optional<Users> foundUserWithUsername = userRepository.findByUsername(username);
+        if (foundUserWithEmail.isPresent()) throw new UserAlreadyExistsException(email, username);
+        if (foundUserWithUsername.isPresent()) throw new UserAlreadyExistsException(email, username);
     }
-
 }
