@@ -1,5 +1,6 @@
 package com.fredfonseca.bookstoremanager.users.entity;
 
+import com.fredfonseca.bookstoremanager.users.enums.Role;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -23,5 +24,15 @@ public class Users {
 
     @Column(nullable = false, length = 120)
     private String address;
+
+    @Column(nullable = false, unique = true, length = 30)
+    private String username;
+
+    @Column(nullable = false)
+    private String password;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private Role role;
 }
 

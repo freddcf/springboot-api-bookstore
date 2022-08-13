@@ -1,5 +1,8 @@
 package com.fredfonseca.bookstoremanager.users.controller;
 
+import com.fredfonseca.bookstoremanager.users.dto.JwtRequest;
+import com.fredfonseca.bookstoremanager.users.dto.JwtResponse;
+import com.fredfonseca.bookstoremanager.users.dto.MessageDTO;
 import com.fredfonseca.bookstoremanager.users.dto.UserDTO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -16,7 +19,7 @@ public interface UserControllerDocs {
             @ApiResponse(code = 201, message = "Success user creation"),
             @ApiResponse(code = 400, message = "Missing required fields, wrong field range value or user already registered on system")
     })
-    UserDTO create(UserDTO userToCreateDTO);
+    MessageDTO create(UserDTO userToCreateDTO);
 
     @ApiOperation(value = "User delete operation")
     @ApiResponses(value = {
@@ -30,7 +33,7 @@ public interface UserControllerDocs {
             @ApiResponse(code = 200, message = "Success user updated"),
             @ApiResponse(code = 400, message = "Missing required field, or an error on validation field rules")
     })
-    UserDTO update(Long id, UserDTO userToUpdateDTO);
+    MessageDTO update(Long id, UserDTO userToUpdateDTO);
 
     @ApiOperation(value = "Find user by id operation")
     @ApiResponses(value = {
@@ -44,4 +47,11 @@ public interface UserControllerDocs {
             @ApiResponse(code = 200, message = "Return all registered users")
     })
     List<UserDTO> findAll();
+
+    @ApiOperation(value = "User authentication operation")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success user authenticated"),
+            @ApiResponse(code = 404, message = "User not found")
+    })
+    JwtResponse createAuthenticationToken(JwtRequest jwtRequest);
 }

@@ -1,6 +1,7 @@
 package com.fredfonseca.bookstoremanager.users.service;
 
 import com.fredfonseca.bookstoremanager.rentals.repository.RentalRepository;
+import com.fredfonseca.bookstoremanager.users.dto.MessageDTO;
 import com.fredfonseca.bookstoremanager.users.dto.UserDTO;
 import com.fredfonseca.bookstoremanager.users.entity.Users;
 import com.fredfonseca.bookstoremanager.users.exception.DeleteDeniedException;
@@ -9,11 +10,15 @@ import com.fredfonseca.bookstoremanager.users.exception.UserNotFoundException;
 import com.fredfonseca.bookstoremanager.users.mapper.UserMapper;
 import com.fredfonseca.bookstoremanager.users.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static com.fredfonseca.bookstoremanager.users.utils.MessageDTOUtils.creationMessage;
+import static com.fredfonseca.bookstoremanager.users.utils.MessageDTOUtils.updatedMessage;
 
 @Service
 public class UserService {
@@ -24,28 +29,34 @@ public class UserService {
 
     private RentalRepository rentalRepository;
 
+    private PasswordEncoder passwordEncoder;
+
     @Autowired
-    public UserService(UserRepository userRepository,RentalRepository rentalRepository) {
+    public UserService(UserRepository userRepository,RentalRepository rentalRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.rentalRepository = rentalRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    public UserDTO create(UserDTO userToCreateDTO) {
-        verifyIfExists(userToCreateDTO.getEmail());
+    public MessageDTO create(UserDTO userToCreateDTO) {
+        verifyIfExists(userToCreateDTO.getEmail(), userToCreateDTO.getUsername());
         Users userToCreate = userMapper.toModel(userToCreateDTO);
+        userToCreate.setPassword(passwordEncoder.encode(userToCreate.getPassword()));
 
         Users createdUser = userRepository.save(userToCreate);
-        return userMapper.toDTO(createdUser);
+        return creationMessage(createdUser);
     }
 
-    public UserDTO update(Long id, UserDTO userToUpdateDTO) {
+    public MessageDTO update(Long id, UserDTO userToUpdateDTO) {
         Users foundUser = verifyAndGetIfExists(id);
+        verifyIfExists(userToUpdateDTO.getEmail(), userToUpdateDTO.getUsername());
 
         userToUpdateDTO.setId(foundUser.getId());
         Users userToUpdate = userMapper.toModel(userToUpdateDTO);
+        userToUpdate.setPassword(passwordEncoder.encode(userToUpdate.getPassword()));
 
         Users updatedUser = userRepository.save(userToUpdate);
-        return userMapper.toDTO(updatedUser);
+        return updatedMessage(updatedUser);
     }
 
     public void delete(Long id) {
@@ -71,9 +82,10 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException(id));
     }
 
-    private void verifyIfExists(String email) {
-        Optional<Users> foundUser = userRepository.findByEmail(email);
-        if(foundUser.isPresent()) throw new UserAlreadyExistsException(email);
+    private void verifyIfExists(String email, String username) {
+        Optional<Users> foundUserWithEmail = userRepository.findByEmail(email);
+        Optional<Users> foundUserWithUsername = userRepository.findByUsername(username);
+        if (foundUserWithEmail.isPresent()) throw new UserAlreadyExistsException(email, username);
+        if (foundUserWithUsername.isPresent()) throw new UserAlreadyExistsException(email, username);
     }
-
 }

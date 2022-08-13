@@ -11,11 +11,12 @@ This is a Spring Boot RestAPI project using PostgreSQL as database.
 - [PostgreSQL](https://www.postgresql.org) - Relational database
 
 ## 🎯 Goals:
-- Learn the basis os Spring Boot
-- Learn to validate data on backend
+- Learn the basics of Spring Boot
+- Learn to validate data on backend using DTOs
 - Manage dependencies with Maven
 - Create a backend RestAPI based application to integrate with a Bookstore frontend app
 - Treat backend exceptions according with the rules of Http Status
+- Relate tables for database environment
 
 ## ⚡ Version:
 ```
