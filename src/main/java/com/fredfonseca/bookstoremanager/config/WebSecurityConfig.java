@@ -4,6 +4,7 @@ import com.fredfonseca.bookstoremanager.users.enums.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -40,22 +41,22 @@ public class WebSecurityConfig{
     };
 
     private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-
     private UserDetailsService userDetailsService;
-
     private PasswordEncoder passwordEncoder;
-
     private JwtRequestFilter jwtRequestFilter;
+    private JwtAuthenticationLvlDenied jwtAuthenticationLvlDenied;
 
     @Autowired
     public WebSecurityConfig(JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint,
                              UserDetailsService userDetailsService,
                              PasswordEncoder passwordEncoder,
-                             JwtRequestFilter jwtRequestFilter) {
+                             JwtRequestFilter jwtRequestFilter,
+                             JwtAuthenticationLvlDenied jwtAuthenticationLvlDenied) {
         this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
         this.userDetailsService = userDetailsService;
         this.passwordEncoder = passwordEncoder;
         this.jwtRequestFilter = jwtRequestFilter;
+        this.jwtAuthenticationLvlDenied = jwtAuthenticationLvlDenied;
     }
 
     @Autowired
@@ -76,6 +77,7 @@ public class WebSecurityConfig{
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                .and().exceptionHandling().accessDeniedHandler(jwtAuthenticationLvlDenied)
                 .and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
@@ -89,4 +91,6 @@ public class WebSecurityConfig{
     public WebSecurityCustomizer webSecurityCustomizer() throws Exception {
         return (web) -> web.ignoring().antMatchers(SWAGGER_RESOURCES);
     }
+
+
 }

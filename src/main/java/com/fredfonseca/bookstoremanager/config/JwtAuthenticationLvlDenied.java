@@ -5,8 +5,8 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fredfonseca.bookstoremanager.exception.ApiError;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.ServletException;
@@ -18,20 +18,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint{
+public class JwtAuthenticationLvlDenied implements AccessDeniedHandler{
 
     @Override
-    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-
+    public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException exception) throws IOException, ServletException {
+        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-
         List<String> errorList = new ArrayList<>();
-        errorList.add("Unauthorized");
+        errorList.add("Forbidden");
 
         ApiError error = ApiError.builder()
-                .code(HttpStatus.UNAUTHORIZED.value())
-                .status(HttpStatus.UNAUTHORIZED.getReasonPhrase())
+                .code(HttpStatus.FORBIDDEN.value())
+                .status(HttpStatus.FORBIDDEN.getReasonPhrase())
                 .message(exception.getMessage())
                 .errors(errorList)
                 .timestamp(LocalDateTime.now())
