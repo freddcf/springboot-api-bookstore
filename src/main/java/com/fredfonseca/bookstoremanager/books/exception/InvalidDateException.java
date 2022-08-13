@@ -4,7 +4,7 @@ import javax.persistence.EntityExistsException;
 
 public class InvalidDateException extends EntityExistsException {
     public InvalidDateException() {
-        super("Rental date should not be before or the same day of the return forecast ");
+        super("Launch date should not be in a future date");
     }
 }
 
