@@ -1,9 +1,11 @@
 package com.fredfonseca.bookstoremanager.users.entity;
 
+import com.fredfonseca.bookstoremanager.rentals.entity.Rental;
 import com.fredfonseca.bookstoremanager.users.enums.Role;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @Entity
@@ -34,5 +36,8 @@ public class Users {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private Role role;
+
+    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Rental> rentals;
 }
 
