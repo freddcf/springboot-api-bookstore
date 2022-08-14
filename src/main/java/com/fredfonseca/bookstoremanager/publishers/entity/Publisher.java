@@ -1,8 +1,10 @@
 package com.fredfonseca.bookstoremanager.publishers.entity;
 
+import com.fredfonseca.bookstoremanager.books.entity.Book;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @Entity
@@ -17,4 +19,7 @@ public class Publisher {
 
     @Column(nullable = false, length = 100)
     private String city;
+
+    @OneToMany(mappedBy = "publisher", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Book> books;
 }
