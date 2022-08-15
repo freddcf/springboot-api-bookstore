@@ -1,6 +1,6 @@
 package com.fredfonseca.bookstoremanager.books.dto;
 
-import com.fredfonseca.bookstoremanager.publishers.dto.PublisherDTO;
+import com.fredfonseca.bookstoremanager.publishers.dto.PublisherRequestDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,5 +24,5 @@ public class BookResponseDTO {
 
     private String author;
 
-    private PublisherDTO publisher;
+    private PublisherRequestDTO publisher;
 }

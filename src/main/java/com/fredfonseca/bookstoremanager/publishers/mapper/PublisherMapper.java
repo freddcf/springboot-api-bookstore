@@ -1,6 +1,7 @@
 package com.fredfonseca.bookstoremanager.publishers.mapper;
 
-import com.fredfonseca.bookstoremanager.publishers.dto.PublisherDTO;
+import com.fredfonseca.bookstoremanager.publishers.dto.PublisherRequestDTO;
+import com.fredfonseca.bookstoremanager.publishers.dto.PublisherResponseDTO;
 import com.fredfonseca.bookstoremanager.publishers.entity.Publisher;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -10,7 +11,7 @@ public interface PublisherMapper {
 
     PublisherMapper INSTANCE = Mappers.getMapper(PublisherMapper.class);
 
-    Publisher toModel(PublisherDTO publisherDTO);
+    Publisher toModel(PublisherRequestDTO publisherRequestDTO);
 
-    PublisherDTO toDTO(Publisher publisher);
+    PublisherResponseDTO toDTO(Publisher publisher);
 }

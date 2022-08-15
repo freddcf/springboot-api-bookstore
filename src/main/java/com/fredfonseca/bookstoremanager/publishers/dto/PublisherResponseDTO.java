@@ -11,17 +11,11 @@ import javax.validation.constraints.Size;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PublisherDTO {
+public class PublisherResponseDTO {
 
     private Long id;
 
-    @NotNull
-    @NotEmpty
-    @Size(max = 255)
     private String name;
 
-    @NotNull
-    @NotEmpty
-    @Size(max = 50)
     private String city;
 }

@@ -54,8 +54,10 @@ public class UserService {
         validateCredentialsChange(foundUser.getEmail(), foundUser.getUsername(),
                 userToUpdateDTO.getEmail(), userToUpdateDTO.getUsername());
 
-        userToUpdateDTO.setId(foundUser.getId());
         Users userToUpdate = userMapper.toModel(userToUpdateDTO);
+        userToUpdate.setId(foundUser.getId());
+        if(!passwordEncoder.matches(userToUpdate.getPassword(), foundUser.getPassword()))
+            throw new UserCredentialsChangeNotAllowed();
         userToUpdate.setPassword(passwordEncoder.encode(userToUpdate.getPassword()));
 
         Users updatedUser = userRepository.save(userToUpdate);

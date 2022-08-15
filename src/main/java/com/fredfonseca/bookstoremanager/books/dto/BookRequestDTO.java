@@ -15,8 +15,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class BookRequestDTO {
 
-    private Long id;
-
     @NotNull
     @NotEmpty
     @Size(max = 100)

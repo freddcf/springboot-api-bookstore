@@ -17,8 +17,6 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 public class UserDTO {
 
-    private Long id;
-
     @NotNull
     @NotEmpty
     @Size(max = 255)
