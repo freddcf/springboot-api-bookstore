@@ -103,4 +103,9 @@ public class UserService {
         Optional<Users> foundUser = userRepository.findByUsername(username);
         if (foundUser.isPresent()) throw new UsernameAlreadyExistsException(username);
     }
+
+    public Users verifyAndGetUserIfExists(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException(username));
+    }
 }

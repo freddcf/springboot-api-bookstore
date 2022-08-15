@@ -4,8 +4,10 @@ import com.fredfonseca.bookstoremanager.rentals.dto.RentalRequestDTO;
 import com.fredfonseca.bookstoremanager.rentals.dto.RentalRequestUpdateDTO;
 import com.fredfonseca.bookstoremanager.rentals.dto.RentalResponseDTO;
 import com.fredfonseca.bookstoremanager.rentals.service.RentalService;
+import com.fredfonseca.bookstoremanager.users.dto.AuthenticatedUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -24,28 +26,28 @@ public class RentalController implements RentalControllerDocs{
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public RentalResponseDTO create(@RequestBody @Valid RentalRequestDTO rentalRequestDTO) {
-        return rentalService.create(rentalRequestDTO);
+    public RentalResponseDTO create(@AuthenticationPrincipal AuthenticatedUser authenticatedUser, @RequestBody @Valid RentalRequestDTO rentalRequestDTO) {
+        return rentalService.create(authenticatedUser, rentalRequestDTO);
     }
 
     @GetMapping("/{id}")
-    public RentalResponseDTO findById(@PathVariable Long id) {
-        return rentalService.findById(id);
+    public RentalResponseDTO findById(@PathVariable Long id, @AuthenticationPrincipal AuthenticatedUser authenticatedUser) {
+        return rentalService.findById(id, authenticatedUser);
     }
 
     @GetMapping
-    public List<RentalResponseDTO> findAll() {
-        return rentalService.findAll();
+    public List<RentalResponseDTO> findAll(@AuthenticationPrincipal AuthenticatedUser authenticatedUser) {
+        return rentalService.findAll(authenticatedUser);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long id) {
-        rentalService.delete(id);
+    public void delete(@PathVariable Long id, @AuthenticationPrincipal AuthenticatedUser authenticatedUser) {
+        rentalService.delete(id, authenticatedUser);
     }
 
     @PutMapping("/{id}")
-    public RentalResponseDTO update(@PathVariable Long id, @RequestBody @Valid RentalRequestUpdateDTO rentalRequestUpdateDTO) {
-        return rentalService.update(id, rentalRequestUpdateDTO);
+    public RentalResponseDTO update(@PathVariable Long id, @AuthenticationPrincipal AuthenticatedUser authenticatedUser, @RequestBody @Valid RentalRequestUpdateDTO rentalRequestUpdateDTO) {
+        return rentalService.update(id, authenticatedUser, rentalRequestUpdateDTO);
     }
 }
