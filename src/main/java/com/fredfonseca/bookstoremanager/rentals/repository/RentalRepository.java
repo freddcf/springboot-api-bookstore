@@ -15,4 +15,8 @@ public interface RentalRepository extends JpaRepository<Rental, Long> {
     Optional<Rental> findByBook(Book book);
 
     Optional<Rental> findByUsers(Users user);
+
+    Optional<Rental> findByIdAndUsers(Long id, Users user);
+
+    List<Rental> findAllByUsers(Users user);
 }
