@@ -1,6 +1,7 @@
 package com.fredfonseca.bookstoremanager.users.service;
 
 import com.fredfonseca.bookstoremanager.rentals.repository.RentalRepository;
+import com.fredfonseca.bookstoremanager.users.dto.AuthenticatedUser;
 import com.fredfonseca.bookstoremanager.users.dto.MessageDTO;
 import com.fredfonseca.bookstoremanager.users.dto.UserDTO;
 import com.fredfonseca.bookstoremanager.users.entity.Users;
@@ -49,34 +50,44 @@ public class UserService {
         return creationMessage(createdUser);
     }
 
-    public MessageDTO update(Long id, UserDTO userToUpdateDTO) {
+    public MessageDTO update(Long id, AuthenticatedUser authenticatedUser, UserDTO userToUpdateDTO) {
+        Users foundAuthenticatedUser = verifyAndGetUserIfExists(authenticatedUser.getUsername());
         Users foundUser = verifyAndGetIfExists(id);
-        validateCredentialsChange(foundUser.getEmail(), foundUser.getUsername(),
-                userToUpdateDTO.getEmail(), userToUpdateDTO.getUsername());
+
+        checkChangeStatusPermission(userToUpdateDTO, foundAuthenticatedUser, foundUser);
 
         Users userToUpdate = userMapper.toModel(userToUpdateDTO);
         userToUpdate.setId(foundUser.getId());
-        if(!passwordEncoder.matches(userToUpdate.getPassword(), foundUser.getPassword()))
-            throw new UserCredentialsChangeNotAllowed();
         userToUpdate.setPassword(passwordEncoder.encode(userToUpdate.getPassword()));
-
         Users updatedUser = userRepository.save(userToUpdate);
         return updatedMessage(updatedUser);
     }
 
-    public void delete(Long id) {
+    public void delete(Long id, AuthenticatedUser authenticatedUser) {
+        Users foundAuthenticatedUser = verifyAndGetUserIfExists(authenticatedUser.getUsername());
         Users userToDelete = verifyAndGetIfExists(id);
-        if(rentalRepository.findByUsers(userToDelete).isPresent()) throw new DeleteDeniedException();
+
+        checkDeleteStatusPermission(foundAuthenticatedUser, userToDelete);
+
+        if(rentalRepository.findByUsers(userToDelete).isPresent())
+            throw new DeleteDeniedException();
         userRepository.deleteById(id);
     }
 
-    public UserDTO findById(Long id) {
+    public UserDTO findById(Long id, AuthenticatedUser authenticatedUser) {
         Users foundUser = verifyAndGetIfExists(id);
         return userMapper.toDTO(foundUser);
     }
 
-    public List<UserDTO> findAll() {
-        return userRepository.findAll()
+    public List<UserDTO> findAll(AuthenticatedUser authenticatedUser) {
+        Users foundAuthenticatedUser = verifyAndGetUserIfExists(authenticatedUser.getUsername());
+        if(isAdmin(foundAuthenticatedUser)) {
+            return userRepository.findAll()
+                    .stream()
+                    .map(userMapper::toDTO)
+                    .collect(Collectors.toList());
+        }
+        return userRepository.findAllByUsername(foundAuthenticatedUser.getUsername())
                 .stream()
                 .map(userMapper::toDTO)
                 .collect(Collectors.toList());
@@ -85,6 +96,26 @@ public class UserService {
     public Users verifyAndGetIfExists(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
+    }
+
+    private boolean isAdmin(Users foundAuthenticatedUser) {
+        return foundAuthenticatedUser.getRole().toString().equals("ADMIN");
+    }
+
+    private void checkChangeStatusPermission(UserDTO userToUpdateDTO, Users authenticatedUser, Users foundUser) {
+        if(isAdmin(authenticatedUser)) return;
+        if(!authenticatedUser.equals(foundUser))
+            throw new InvalidCredentialsChange(foundUser.getName());
+        if(!passwordEncoder.matches(userToUpdateDTO.getPassword(), foundUser.getPassword()))
+            throw new UserCredentialsChangeNotAllowed();
+        validateCredentialsChange(foundUser.getEmail(), foundUser.getUsername(),
+                userToUpdateDTO.getEmail(), userToUpdateDTO.getUsername());
+    }
+
+    private void checkDeleteStatusPermission(Users foundAuthenticatedUser, Users userToDelete) {
+        if(isAdmin(foundAuthenticatedUser)) return;
+        if(!foundAuthenticatedUser.equals(userToDelete))
+            throw new DeleteDeniedException(userToDelete.getName());
     }
 
     private void validateCredentialsChange(String currEmail, String currUsername, String newEmail, String newUsername) {

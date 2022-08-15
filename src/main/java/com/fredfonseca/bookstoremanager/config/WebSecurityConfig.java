@@ -71,9 +71,10 @@ public class WebSecurityConfig{
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf().disable()
-                .authorizeHttpRequests().antMatchers(USERS_API_URL, SWAGGER_URL).permitAll()
+                .authorizeHttpRequests().antMatchers(SWAGGER_URL).permitAll()
+                .antMatchers(HttpMethod.POST, USERS_API_URL).permitAll()
                 .antMatchers(PUBLISHERS_API_URL, BOOKS_API_URL).hasAnyRole(ROLE_ADMIN)
-                .antMatchers(RENTALS_API_URL).hasAnyRole(ROLE_ADMIN, ROLE_USER)
+                .antMatchers(USERS_API_URL, RENTALS_API_URL).hasAnyRole(ROLE_ADMIN, ROLE_USER)
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
