@@ -1,7 +1,8 @@
 package com.fredfonseca.bookstoremanager.publishers.service;
 
 import com.fredfonseca.bookstoremanager.books.repository.BookRepository;
-import com.fredfonseca.bookstoremanager.publishers.dto.PublisherDTO;
+import com.fredfonseca.bookstoremanager.publishers.dto.PublisherRequestDTO;
+import com.fredfonseca.bookstoremanager.publishers.dto.PublisherResponseDTO;
 import com.fredfonseca.bookstoremanager.publishers.entity.Publisher;
 import com.fredfonseca.bookstoremanager.publishers.exception.DeleteDeniedException;
 import com.fredfonseca.bookstoremanager.publishers.exception.PublisherAlreadyExistsException;
@@ -30,21 +31,21 @@ public class PublisherService {
         this.bookRepository = bookRepository;
     }
 
-    public PublisherDTO create(PublisherDTO publisherDTO) {
-        verifyIfExists(publisherDTO.getName());
+    public PublisherResponseDTO create(PublisherRequestDTO publisherRequestDTO) {
+        verifyIfExists(publisherRequestDTO.getName());
 
-        Publisher publisherToCreate = publisherMapper.toModel(publisherDTO);
+        Publisher publisherToCreate = publisherMapper.toModel(publisherRequestDTO);
         Publisher createdPublisher = publisherRepository.save(publisherToCreate);
         return publisherMapper.toDTO(createdPublisher);
     }
 
-    public PublisherDTO findById(Long id) {
+    public PublisherResponseDTO findById(Long id) {
         return publisherRepository.findById(id)
                 .map(publisherMapper::toDTO)
                 .orElseThrow(() -> new PublisherNotFoundException(id));
     }
 
-    public List<PublisherDTO> findAll() {
+    public List<PublisherResponseDTO> findAll() {
         return publisherRepository.findAll()
                 .stream()
                 .map(publisherMapper::toDTO)
@@ -57,7 +58,7 @@ public class PublisherService {
         publisherRepository.deleteById(id);
     }
 
-    public PublisherDTO update(Long id, PublisherDTO publisherToUpdateDTO) {
+    public PublisherResponseDTO update(Long id, PublisherRequestDTO publisherToUpdateDTO) {
         Publisher foundPublisher = verifyAndGetPublisher(id);
         publisherToUpdateDTO.setId(foundPublisher.getId());
 

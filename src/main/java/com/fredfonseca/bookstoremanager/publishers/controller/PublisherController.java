@@ -1,6 +1,7 @@
 package com.fredfonseca.bookstoremanager.publishers.controller;
 
-import com.fredfonseca.bookstoremanager.publishers.dto.PublisherDTO;
+import com.fredfonseca.bookstoremanager.publishers.dto.PublisherRequestDTO;
+import com.fredfonseca.bookstoremanager.publishers.dto.PublisherResponseDTO;
 import com.fredfonseca.bookstoremanager.publishers.service.PublisherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,17 +24,17 @@ public class PublisherController implements PublisherControllerDocs{
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public PublisherDTO create(@RequestBody @Valid PublisherDTO publisherDTO) {
-        return publisherService.create(publisherDTO);
+    public PublisherResponseDTO create(@RequestBody @Valid PublisherRequestDTO publisherRequestDTO) {
+        return publisherService.create(publisherRequestDTO);
     }
 
     @GetMapping("/{id}")
-    public PublisherDTO findById(@PathVariable Long id) {
+    public PublisherResponseDTO findById(@PathVariable Long id) {
         return publisherService.findById(id);
     }
 
     @GetMapping
-    public List<PublisherDTO> findAll() {
+    public List<PublisherResponseDTO> findAll() {
         return publisherService.findAll();
     }
 
@@ -44,7 +45,7 @@ public class PublisherController implements PublisherControllerDocs{
     }
 
     @PutMapping("/{id}")
-    public PublisherDTO update(@PathVariable Long id, @RequestBody @Valid PublisherDTO publisherDTO) {
-        return publisherService.update(id, publisherDTO);
+    public PublisherResponseDTO update(@PathVariable Long id, @RequestBody @Valid PublisherRequestDTO publisherRequestDTO) {
+        return publisherService.update(id, publisherRequestDTO);
     }
 }
