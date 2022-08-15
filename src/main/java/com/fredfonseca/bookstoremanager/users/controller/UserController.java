@@ -1,13 +1,11 @@
 package com.fredfonseca.bookstoremanager.users.controller;
 
-import com.fredfonseca.bookstoremanager.users.dto.JwtRequest;
-import com.fredfonseca.bookstoremanager.users.dto.JwtResponse;
-import com.fredfonseca.bookstoremanager.users.dto.MessageDTO;
-import com.fredfonseca.bookstoremanager.users.dto.UserDTO;
+import com.fredfonseca.bookstoremanager.users.dto.*;
 import com.fredfonseca.bookstoremanager.users.service.AuthenticationService;
 import com.fredfonseca.bookstoremanager.users.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -36,23 +34,23 @@ public class UserController implements UserControllerDocs{
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long id) {
-        userService.delete(id);
+    public void delete(@PathVariable Long id, @AuthenticationPrincipal AuthenticatedUser authenticatedUser) {
+        userService.delete(id, authenticatedUser);
     }
 
     @PutMapping("/{id}")
-    public MessageDTO update(@PathVariable Long id, @RequestBody @Valid UserDTO userToUpdateDTO) {
-        return userService.update(id, userToUpdateDTO);
+    public MessageDTO update(@PathVariable Long id, @AuthenticationPrincipal AuthenticatedUser authenticatedUser, @RequestBody @Valid UserDTO userToUpdateDTO) {
+        return userService.update(id, authenticatedUser, userToUpdateDTO);
     }
 
     @GetMapping("/{id}")
-    public UserDTO findById(@PathVariable Long id) {
-        return userService.findById(id);
+    public UserDTO findById(@PathVariable Long id, @AuthenticationPrincipal AuthenticatedUser authenticatedUser) {
+        return userService.findById(id, authenticatedUser);
     }
 
     @GetMapping
-    public List<UserDTO> findAll() {
-        return userService.findAll();
+    public List<UserDTO> findAll(@AuthenticationPrincipal AuthenticatedUser authenticatedUser) {
+        return userService.findAll(authenticatedUser);
     }
 
     @PostMapping(value = "/authenticate")
