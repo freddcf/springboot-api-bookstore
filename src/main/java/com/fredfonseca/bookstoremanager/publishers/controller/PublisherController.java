@@ -4,6 +4,8 @@ import com.fredfonseca.bookstoremanager.publishers.dto.PublisherRequestDTO;
 import com.fredfonseca.bookstoremanager.publishers.dto.PublisherResponseDTO;
 import com.fredfonseca.bookstoremanager.publishers.service.PublisherService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,8 +36,8 @@ public class PublisherController implements PublisherControllerDocs{
     }
 
     @GetMapping
-    public List<PublisherResponseDTO> findAll() {
-        return publisherService.findAll();
+    public Page<PublisherResponseDTO> findAll(Pageable pageable) {
+        return publisherService.findAll(pageable);
     }
 
     @DeleteMapping("/{id}")

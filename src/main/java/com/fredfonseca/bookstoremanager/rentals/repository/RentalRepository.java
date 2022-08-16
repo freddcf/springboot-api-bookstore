@@ -2,6 +2,8 @@ package com.fredfonseca.bookstoremanager.rentals.repository;
 
 import com.fredfonseca.bookstoremanager.books.entity.Book;
 import com.fredfonseca.bookstoremanager.users.entity.Users;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import com.fredfonseca.bookstoremanager.rentals.entity.Rental;
 
@@ -19,4 +21,5 @@ public interface RentalRepository extends JpaRepository<Rental, Long> {
     Optional<Rental> findByIdAndUsers(Long id, Users user);
 
     List<Rental> findAllByUsers(Users user);
+    Page<Rental> findAllByUsers(Users user, Pageable pageable);
 }

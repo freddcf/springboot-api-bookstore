@@ -6,6 +6,8 @@ import com.fredfonseca.bookstoremanager.rentals.dto.RentalResponseDTO;
 import com.fredfonseca.bookstoremanager.rentals.service.RentalService;
 import com.fredfonseca.bookstoremanager.users.dto.AuthenticatedUser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -36,8 +38,8 @@ public class RentalController implements RentalControllerDocs{
     }
 
     @GetMapping
-    public List<RentalResponseDTO> findAll(@AuthenticationPrincipal AuthenticatedUser authenticatedUser) {
-        return rentalService.findAll(authenticatedUser);
+    public Page<RentalResponseDTO> findAll(@AuthenticationPrincipal AuthenticatedUser authenticatedUser, Pageable pageable) {
+        return rentalService.findAll(authenticatedUser, pageable);
     }
 
     @DeleteMapping("/{id}")

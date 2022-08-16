@@ -4,6 +4,8 @@ import com.fredfonseca.bookstoremanager.users.dto.*;
 import com.fredfonseca.bookstoremanager.users.service.AuthenticationService;
 import com.fredfonseca.bookstoremanager.users.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -49,8 +51,8 @@ public class UserController implements UserControllerDocs{
     }
 
     @GetMapping
-    public List<UserDTO> findAll() {
-        return userService.findAll();
+    public Page<UserDTO> findAll(Pageable pageable) {
+        return userService.findAll(pageable);
     }
 
     @PostMapping(value = "/authenticate")

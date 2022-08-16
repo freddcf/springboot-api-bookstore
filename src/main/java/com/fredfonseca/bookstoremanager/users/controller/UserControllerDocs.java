@@ -5,6 +5,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -43,7 +45,7 @@ public interface UserControllerDocs {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Return all registered users")
     })
-    List<UserDTO> findAll();
+    Page<UserDTO> findAll(Pageable pageable);
 
     @ApiOperation(value = "User authentication operation")
     @ApiResponses(value = {
