@@ -49,8 +49,8 @@ public class UserController implements UserControllerDocs{
     }
 
     @GetMapping
-    public List<UserDTO> findAll(@AuthenticationPrincipal AuthenticatedUser authenticatedUser) {
-        return userService.findAll(authenticatedUser);
+    public List<UserDTO> findAll() {
+        return userService.findAll();
     }
 
     @PostMapping(value = "/authenticate")

@@ -43,7 +43,7 @@ public interface UserControllerDocs {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Return all registered users")
     })
-    List<UserDTO> findAll(AuthenticatedUser authenticatedUser);
+    List<UserDTO> findAll();
 
     @ApiOperation(value = "User authentication operation")
     @ApiResponses(value = {
