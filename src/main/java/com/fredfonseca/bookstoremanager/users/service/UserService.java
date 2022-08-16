@@ -79,15 +79,8 @@ public class UserService {
         return userMapper.toDTO(foundUser);
     }
 
-    public List<UserDTO> findAll(AuthenticatedUser authenticatedUser) {
-        Users foundAuthenticatedUser = verifyAndGetUserIfExists(authenticatedUser.getUsername());
-        if(isAdmin(foundAuthenticatedUser)) {
-            return userRepository.findAll()
-                    .stream()
-                    .map(userMapper::toDTO)
-                    .collect(Collectors.toList());
-        }
-        return userRepository.findAllByUsername(foundAuthenticatedUser.getUsername())
+    public List<UserDTO> findAll() {
+        return userRepository.findAll()
                 .stream()
                 .map(userMapper::toDTO)
                 .collect(Collectors.toList());
