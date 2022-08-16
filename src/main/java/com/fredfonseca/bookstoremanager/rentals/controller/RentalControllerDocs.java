@@ -7,6 +7,8 @@ import com.fredfonseca.bookstoremanager.users.dto.AuthenticatedUser;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -30,7 +32,7 @@ public interface RentalControllerDocs {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Success rental list found")
     })
-    List<RentalResponseDTO> findAll(AuthenticatedUser authenticatedUser);
+    Page<RentalResponseDTO> findAll(AuthenticatedUser authenticatedUser, Pageable pageable);
 
     @ApiOperation(value = "Rental delete operation")
     @ApiResponses(value = {

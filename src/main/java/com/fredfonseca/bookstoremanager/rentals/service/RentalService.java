@@ -13,6 +13,8 @@ import com.fredfonseca.bookstoremanager.users.dto.AuthenticatedUser;
 import com.fredfonseca.bookstoremanager.users.entity.Users;
 import com.fredfonseca.bookstoremanager.users.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -73,16 +75,14 @@ public class RentalService {
                 .orElseThrow(() -> new RentalNotFoundException(id));
     }
 
-    public List<RentalResponseDTO> findAll(AuthenticatedUser authenticatedUser) {
+    public Page<RentalResponseDTO> findAll(AuthenticatedUser authenticatedUser, Pageable pageable) {
         Users foundAuthenticatedUser = userService.verifyAndGetUserIfExists(authenticatedUser.getUsername());
         if(isAdmin(foundAuthenticatedUser)) {
-            return rentalRepository.findAll().stream()
-                    .map(rentalMapper::toDTO)
-                    .collect(Collectors.toList());
+            return rentalRepository.findAll(pageable)
+                    .map(rentalMapper::toDTO);
         }
-        return rentalRepository.findAllByUsers(foundAuthenticatedUser).stream()
-                .map(rentalMapper::toDTO)
-                .collect(Collectors.toList());
+        return rentalRepository.findAllByUsers(foundAuthenticatedUser, pageable)
+                .map(rentalMapper::toDTO);
     }
 
     public void delete(Long id, AuthenticatedUser authenticatedUser) {

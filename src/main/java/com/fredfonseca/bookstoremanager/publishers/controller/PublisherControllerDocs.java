@@ -6,6 +6,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -30,7 +32,7 @@ public interface PublisherControllerDocs {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Return all registered publishers")
     })
-    List<PublisherResponseDTO> findAll();
+    Page<PublisherResponseDTO> findAll(Pageable pageable);
 
     @ApiOperation(value = "Delete publisher by id operation")
     @ApiResponses(value = {

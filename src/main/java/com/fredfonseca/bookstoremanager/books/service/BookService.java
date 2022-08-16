@@ -13,6 +13,8 @@ import com.fredfonseca.bookstoremanager.publishers.entity.Publisher;
 import com.fredfonseca.bookstoremanager.publishers.service.PublisherService;
 import com.fredfonseca.bookstoremanager.rentals.repository.RentalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.text.DateFormat;
@@ -62,10 +64,9 @@ public class BookService {
                 .orElseThrow(() -> new BookNotFoundException(id));
     }
 
-    public List<BookResponseDTO> findAll() {
-        return bookRepository.findAll().stream()
-                .map(bookMapper::toDTO)
-                .collect(Collectors.toList());
+    public Page<BookResponseDTO> findAll(Pageable pageable) {
+        return bookRepository.findAll(pageable)
+                .map(bookMapper::toDTO);
     }
 
     public void delete(Long id) {

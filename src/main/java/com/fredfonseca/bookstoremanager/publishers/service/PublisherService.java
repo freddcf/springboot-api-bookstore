@@ -10,6 +10,8 @@ import com.fredfonseca.bookstoremanager.publishers.exception.PublisherNotFoundEx
 import com.fredfonseca.bookstoremanager.publishers.mapper.PublisherMapper;
 import com.fredfonseca.bookstoremanager.publishers.repository.PublisherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -45,11 +47,9 @@ public class PublisherService {
                 .orElseThrow(() -> new PublisherNotFoundException(id));
     }
 
-    public List<PublisherResponseDTO> findAll() {
-        return publisherRepository.findAll()
-                .stream()
-                .map(publisherMapper::toDTO)
-                .collect(Collectors.toList());
+    public Page<PublisherResponseDTO> findAll(Pageable pageable) {
+        return publisherRepository.findAll(pageable)
+                .map(publisherMapper::toDTO);
     }
 
     public void delete(Long id) {
