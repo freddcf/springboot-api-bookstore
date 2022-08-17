@@ -1,5 +1,6 @@
 package com.fredfonseca.bookstoremanager.exception;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,6 +42,14 @@ public class BookstoreExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleDateTimeException(DateTimeException exception) {
         return buildResponseEntity(
                 HttpStatus.BAD_REQUEST,
+                exception.getMessage(),
+                Collections.singletonList(exception.getMessage()));
+    }
+
+    @ExceptionHandler(ExpiredJwtException.class)
+    public ResponseEntity<Object> handleExpiredJwtException(ExpiredJwtException exception) {
+        return buildResponseEntity(
+                HttpStatus.UNAUTHORIZED,
                 exception.getMessage(),
                 Collections.singletonList(exception.getMessage()));
     }
