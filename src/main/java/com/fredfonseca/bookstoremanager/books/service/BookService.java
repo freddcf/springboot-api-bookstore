@@ -3,9 +3,9 @@ package com.fredfonseca.bookstoremanager.books.service;
 import com.fredfonseca.bookstoremanager.books.dto.BookRequestDTO;
 import com.fredfonseca.bookstoremanager.books.dto.BookResponseDTO;
 import com.fredfonseca.bookstoremanager.books.entity.Book;
-import com.fredfonseca.bookstoremanager.books.exception.DeleteDeniedException;
 import com.fredfonseca.bookstoremanager.books.exception.BookAlreadyExistsException;
 import com.fredfonseca.bookstoremanager.books.exception.BookNotFoundException;
+import com.fredfonseca.bookstoremanager.books.exception.DeleteDeniedException;
 import com.fredfonseca.bookstoremanager.books.exception.InvalidDateException;
 import com.fredfonseca.bookstoremanager.books.mapper.BookMapper;
 import com.fredfonseca.bookstoremanager.books.repository.BookRepository;
@@ -17,16 +17,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.text.DateFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.time.chrono.ChronoLocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class BookService {

@@ -1,11 +1,11 @@
 package com.fredfonseca.bookstoremanager.rentals.repository;
 
 import com.fredfonseca.bookstoremanager.books.entity.Book;
+import com.fredfonseca.bookstoremanager.rentals.entity.Rental;
 import com.fredfonseca.bookstoremanager.users.entity.Users;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import com.fredfonseca.bookstoremanager.rentals.entity.Rental;
 
 import java.util.List;
 import java.util.Optional;
