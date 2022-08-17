@@ -76,7 +76,6 @@ public class WebSecurityConfig{
                 .antMatchers(HttpMethod.GET, USERS_API_URL).permitAll()
                 .antMatchers(HttpMethod.GET, PUBLISHERS_API_URL).permitAll()
                 .antMatchers(HttpMethod.GET, BOOKS_API_URL).permitAll()
-                .antMatchers(HttpMethod.GET, RENTALS_API_URL).permitAll()
                 .antMatchers(PUBLISHERS_API_URL, BOOKS_API_URL).hasAnyRole(ROLE_ADMIN)
                 .antMatchers(USERS_API_URL, RENTALS_API_URL).hasAnyRole(ROLE_ADMIN, ROLE_USER)
                 .anyRequest().authenticated()
