@@ -13,8 +13,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class RentalRequestDTO {
 
-    private Long id;
-
     @NotNull
     private Long bookId;
 

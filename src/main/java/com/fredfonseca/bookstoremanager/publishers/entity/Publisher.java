@@ -20,6 +20,6 @@ public class Publisher {
     @Column(nullable = false, length = 100)
     private String city;
 
-    @OneToMany(mappedBy = "publisher", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "publisher", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Book> books;
 }

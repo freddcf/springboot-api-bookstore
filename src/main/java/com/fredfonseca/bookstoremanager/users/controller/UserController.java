@@ -45,8 +45,8 @@ public class UserController implements UserControllerDocs{
     }
 
     @GetMapping("/{id}")
-    public UserDTO findById(@PathVariable Long id, @AuthenticationPrincipal AuthenticatedUser authenticatedUser) {
-        return userService.findById(id, authenticatedUser);
+    public UserDTO findById(@PathVariable Long id) {
+        return userService.findById(id);
     }
 
     @GetMapping
