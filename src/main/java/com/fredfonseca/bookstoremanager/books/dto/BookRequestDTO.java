@@ -15,8 +15,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class BookRequestDTO {
 
-    private Long id;
-
     @NotNull
     @NotEmpty
     @Size(max = 100)
@@ -34,6 +32,5 @@ public class BookRequestDTO {
     private String author;
 
     @NotNull
-    @NotEmpty
-    private String publisherName;
+    private Long publisherId;
 }

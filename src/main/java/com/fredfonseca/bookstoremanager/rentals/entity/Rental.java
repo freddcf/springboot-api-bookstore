@@ -24,9 +24,11 @@ public class Rental {
     @Column
     private String returnDate;
 
-    @ManyToOne(cascade = {CascadeType.MERGE})
+    @ManyToOne
+    @JoinColumn(name = "book_id")
     private Book book;
 
-    @ManyToOne(cascade = {CascadeType.MERGE})
+    @ManyToOne
+    @JoinColumn(name = "users_id")
     private Users users;
 }

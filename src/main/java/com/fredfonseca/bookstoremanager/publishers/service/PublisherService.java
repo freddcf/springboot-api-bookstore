@@ -1,7 +1,8 @@
 package com.fredfonseca.bookstoremanager.publishers.service;
 
 import com.fredfonseca.bookstoremanager.books.repository.BookRepository;
-import com.fredfonseca.bookstoremanager.publishers.dto.PublisherDTO;
+import com.fredfonseca.bookstoremanager.publishers.dto.PublisherRequestDTO;
+import com.fredfonseca.bookstoremanager.publishers.dto.PublisherResponseDTO;
 import com.fredfonseca.bookstoremanager.publishers.entity.Publisher;
 import com.fredfonseca.bookstoremanager.publishers.exception.DeleteDeniedException;
 import com.fredfonseca.bookstoremanager.publishers.exception.PublisherAlreadyExistsException;
@@ -9,11 +10,11 @@ import com.fredfonseca.bookstoremanager.publishers.exception.PublisherNotFoundEx
 import com.fredfonseca.bookstoremanager.publishers.mapper.PublisherMapper;
 import com.fredfonseca.bookstoremanager.publishers.repository.PublisherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class PublisherService {
@@ -30,25 +31,23 @@ public class PublisherService {
         this.bookRepository = bookRepository;
     }
 
-    public PublisherDTO create(PublisherDTO publisherDTO) {
-        verifyIfExists(publisherDTO.getName());
+    public PublisherResponseDTO create(PublisherRequestDTO publisherRequestDTO) {
+        verifyIfExists(publisherRequestDTO.getName());
 
-        Publisher publisherToCreate = publisherMapper.toModel(publisherDTO);
+        Publisher publisherToCreate = publisherMapper.toModel(publisherRequestDTO);
         Publisher createdPublisher = publisherRepository.save(publisherToCreate);
         return publisherMapper.toDTO(createdPublisher);
     }
 
-    public PublisherDTO findById(Long id) {
+    public PublisherResponseDTO findById(Long id) {
         return publisherRepository.findById(id)
                 .map(publisherMapper::toDTO)
                 .orElseThrow(() -> new PublisherNotFoundException(id));
     }
 
-    public List<PublisherDTO> findAll() {
-        return publisherRepository.findAll()
-                .stream()
-                .map(publisherMapper::toDTO)
-                .collect(Collectors.toList());
+    public Page<PublisherResponseDTO> findAll(Pageable pageable) {
+        return publisherRepository.findAll(pageable)
+                .map(publisherMapper::toDTO);
     }
 
     public void delete(Long id) {
@@ -57,7 +56,7 @@ public class PublisherService {
         publisherRepository.deleteById(id);
     }
 
-    public PublisherDTO update(Long id, PublisherDTO publisherToUpdateDTO) {
+    public PublisherResponseDTO update(Long id, PublisherRequestDTO publisherToUpdateDTO) {
         Publisher foundPublisher = verifyAndGetPublisher(id);
         publisherToUpdateDTO.setId(foundPublisher.getId());
 
@@ -90,8 +89,8 @@ public class PublisherService {
                 .orElseThrow(() -> new PublisherNotFoundException(id));
     }
 
-    public Publisher verifyAndGetIfExists(String name) {
-        return publisherRepository.findByName(name)
-                .orElseThrow(() -> new PublisherNotFoundException(name));
+    public Publisher verifyAndGetIfExists(Long id) {
+        return publisherRepository.findById(id)
+                .orElseThrow(() -> new PublisherNotFoundException(id));
     }
 }

@@ -1,9 +1,10 @@
-package com.fredfonseca.bookstoremanager.rentals.exception;
+package com.fredfonseca.bookstoremanager.books.exception;
 
 import javax.persistence.EntityExistsException;
 
 public class InvalidDateException extends EntityExistsException {
     public InvalidDateException() {
-        super("Return forecast may not be before the rental date");
+        super("Launch date should not be in a future date");
     }
 }
+

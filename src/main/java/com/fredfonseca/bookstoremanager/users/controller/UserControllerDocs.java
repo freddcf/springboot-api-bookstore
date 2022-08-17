@@ -1,12 +1,12 @@
 package com.fredfonseca.bookstoremanager.users.controller;
 
-import com.fredfonseca.bookstoremanager.users.dto.UserDTO;
+import com.fredfonseca.bookstoremanager.users.dto.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @Api("System users management")
 public interface UserControllerDocs {
@@ -16,21 +16,21 @@ public interface UserControllerDocs {
             @ApiResponse(code = 201, message = "Success user creation"),
             @ApiResponse(code = 400, message = "Missing required fields, wrong field range value or user already registered on system")
     })
-    UserDTO create(UserDTO userToCreateDTO);
+    MessageDTO create(UserDTO userToCreateDTO);
 
     @ApiOperation(value = "User delete operation")
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "Success user exclusion"),
             @ApiResponse(code = 404, message = "User with id not found in the System")
     })
-    void delete(Long id);
+    void delete(Long id, AuthenticatedUser authenticatedUser);
 
     @ApiOperation(value = "User update operation")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Success user updated"),
             @ApiResponse(code = 400, message = "Missing required field, or an error on validation field rules")
     })
-    UserDTO update(Long id, UserDTO userToUpdateDTO);
+    MessageDTO update(Long id, AuthenticatedUser authenticatedUser, UserDTO userToUpdateDTO);
 
     @ApiOperation(value = "Find user by id operation")
     @ApiResponses(value = {
@@ -43,5 +43,12 @@ public interface UserControllerDocs {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Return all registered users")
     })
-    List<UserDTO> findAll();
+    Page<UserDTO> findAll(Pageable pageable);
+
+    @ApiOperation(value = "User authentication operation")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success user authenticated"),
+            @ApiResponse(code = 404, message = "User not found")
+    })
+    JwtResponse createAuthenticationToken(JwtRequest jwtRequest);
 }

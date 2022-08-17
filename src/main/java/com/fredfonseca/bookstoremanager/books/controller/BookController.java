@@ -4,11 +4,12 @@ import com.fredfonseca.bookstoremanager.books.dto.BookRequestDTO;
 import com.fredfonseca.bookstoremanager.books.dto.BookResponseDTO;
 import com.fredfonseca.bookstoremanager.books.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/books")
@@ -33,8 +34,8 @@ public class BookController implements  BookControllerDocs{
     }
 
     @GetMapping
-    public List<BookResponseDTO> findAll() {
-        return bookService.findAll();
+    public Page<BookResponseDTO> findAll(Pageable pageable) {
+        return bookService.findAll(pageable);
     }
 
     @DeleteMapping("/{id}")

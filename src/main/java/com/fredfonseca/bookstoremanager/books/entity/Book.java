@@ -1,10 +1,12 @@
 package com.fredfonseca.bookstoremanager.books.entity;
 
 import com.fredfonseca.bookstoremanager.publishers.entity.Publisher;
+import com.fredfonseca.bookstoremanager.rentals.entity.Rental;
 import lombok.Data;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @Entity
@@ -29,6 +31,10 @@ public class Book {
     @Column(nullable = false)
     private String author;
 
-    @ManyToOne(cascade = {CascadeType.MERGE})
+    @ManyToOne
+    @JoinColumn(name = "publisher_id")
     private Publisher publisher;
+
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Rental> rentals;
 }

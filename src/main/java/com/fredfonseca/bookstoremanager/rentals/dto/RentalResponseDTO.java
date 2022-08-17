@@ -1,7 +1,7 @@
 package com.fredfonseca.bookstoremanager.rentals.dto;
 
-import com.fredfonseca.bookstoremanager.books.entity.Book;
-import com.fredfonseca.bookstoremanager.users.entity.Users;
+import com.fredfonseca.bookstoremanager.books.dto.BookResponseDTO;
+import com.fredfonseca.bookstoremanager.users.dto.UserDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,9 +15,9 @@ public class RentalResponseDTO {
 
     private Long id;
 
-    private Book book;
+    private BookResponseDTO book;
 
-    private Users users;
+    private UserDTO users;
 
     private LocalDate rentalDate;
 

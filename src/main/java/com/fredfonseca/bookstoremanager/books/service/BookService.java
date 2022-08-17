@@ -3,20 +3,22 @@ package com.fredfonseca.bookstoremanager.books.service;
 import com.fredfonseca.bookstoremanager.books.dto.BookRequestDTO;
 import com.fredfonseca.bookstoremanager.books.dto.BookResponseDTO;
 import com.fredfonseca.bookstoremanager.books.entity.Book;
-import com.fredfonseca.bookstoremanager.books.exception.DeleteDeniedException;
 import com.fredfonseca.bookstoremanager.books.exception.BookAlreadyExistsException;
 import com.fredfonseca.bookstoremanager.books.exception.BookNotFoundException;
+import com.fredfonseca.bookstoremanager.books.exception.DeleteDeniedException;
+import com.fredfonseca.bookstoremanager.books.exception.InvalidDateException;
 import com.fredfonseca.bookstoremanager.books.mapper.BookMapper;
 import com.fredfonseca.bookstoremanager.books.repository.BookRepository;
 import com.fredfonseca.bookstoremanager.publishers.entity.Publisher;
 import com.fredfonseca.bookstoremanager.publishers.service.PublisherService;
 import com.fredfonseca.bookstoremanager.rentals.repository.RentalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.time.LocalDate;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class BookService {
@@ -38,7 +40,8 @@ public class BookService {
 
     public BookResponseDTO create(BookRequestDTO bookRequestDTO) {
         verifyIfExists(bookRequestDTO.getName());
-        Publisher foundPublisher = publisherService.verifyAndGetIfExists(bookRequestDTO.getPublisherName());
+        Publisher foundPublisher = publisherService.verifyAndGetIfExists(bookRequestDTO.getPublisherId());
+        validateDate(bookRequestDTO);
 
         Book bookToSave = bookMapper.toModel(bookRequestDTO);
         bookToSave.setPublisher(foundPublisher);
@@ -53,10 +56,9 @@ public class BookService {
                 .orElseThrow(() -> new BookNotFoundException(id));
     }
 
-    public List<BookResponseDTO> findAll() {
-        return bookRepository.findAll().stream()
-                .map(bookMapper::toDTO)
-                .collect(Collectors.toList());
+    public Page<BookResponseDTO> findAll(Pageable pageable) {
+        return bookRepository.findAll(pageable)
+                .map(bookMapper::toDTO);
     }
 
     public void delete(Long id) {
@@ -67,7 +69,8 @@ public class BookService {
 
     public BookResponseDTO update(Long id, BookRequestDTO bookRequestDTO) {
         Book foundBook = verifyAndGetIfExists(id);
-        Publisher foundPublisher = publisherService.verifyAndGetIfExists(bookRequestDTO.getPublisherName());
+        Publisher foundPublisher = publisherService.verifyAndGetIfExists(bookRequestDTO.getPublisherId());
+        validateDate(bookRequestDTO);
 
         Book bookToUpdate = bookMapper.toModel(bookRequestDTO);
         bookToUpdate.setId(id);
@@ -86,5 +89,11 @@ public class BookService {
         Optional<Book> duplicatedBook = bookRepository
                 .findByName(name);
         if(duplicatedBook.isPresent()) throw new BookAlreadyExistsException(name);
+    }
+
+    private void validateDate(BookRequestDTO bookRequestDTO) {
+        LocalDate today = LocalDate.now();
+        if(bookRequestDTO.getLaunchDate().isAfter(today))
+            throw new InvalidDateException();
     }
 }
