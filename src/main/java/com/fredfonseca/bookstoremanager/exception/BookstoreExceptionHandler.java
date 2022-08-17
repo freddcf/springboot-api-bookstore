@@ -46,13 +46,6 @@ public class BookstoreExceptionHandler extends ResponseEntityExceptionHandler {
                 Collections.singletonList(exception.getMessage()));
     }
 
-    @ExceptionHandler(ExpiredJwtException.class)
-    public ResponseEntity<Object> handleExpiredJwtException(ExpiredJwtException exception) {
-        return buildResponseEntity(
-                HttpStatus.UNAUTHORIZED,
-                exception.getMessage(),
-                Collections.singletonList(exception.getMessage()));
-    }
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(

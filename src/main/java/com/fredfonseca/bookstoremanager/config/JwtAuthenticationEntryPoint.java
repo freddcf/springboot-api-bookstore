@@ -32,7 +32,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint{
         ApiError error = ApiError.builder()
                 .code(HttpStatus.UNAUTHORIZED.value())
                 .status(HttpStatus.UNAUTHORIZED.getReasonPhrase())
-                .message(exception.getMessage())
+                .message("Authentication required. Access token cannot be reached, try Login again!")
                 .errors(errorList)
                 .timestamp(LocalDateTime.now())
                 .build();

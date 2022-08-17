@@ -30,7 +30,7 @@ public class JwtAuthenticationLvlDenied implements AccessDeniedHandler{
         ApiError error = ApiError.builder()
                 .code(HttpStatus.FORBIDDEN.value())
                 .status(HttpStatus.FORBIDDEN.getReasonPhrase())
-                .message(exception.getMessage())
+                .message(exception.getMessage() + ". Admin only!")
                 .errors(errorList)
                 .timestamp(LocalDateTime.now())
                 .build();
