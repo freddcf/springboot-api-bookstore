@@ -13,8 +13,6 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 public class PublisherRequestDTO {
 
-    private Long id;
-
     @NotNull
     @NotEmpty
     @Size(max = 255)
