@@ -38,16 +38,14 @@ public class RentalService {
         this.userService = userService;
     }
 
-    public RentalResponseDTO create(AuthenticatedUser authenticatedUser, RentalRequestDTO rentalRequestDTO) {
-        Users foundAuthenticatedUser = userService.verifyAndGetUserIfExists(authenticatedUser.getUsername());
-        if(foundAuthenticatedUser.getRole().toString().equals("ADMIN")) throw new RentalCreationNotAllowed();
-
+    public RentalResponseDTO create(RentalRequestDTO rentalRequestDTO) {
         Book foundBook = bookService.verifyAndGetIfExists(rentalRequestDTO.getBookId());
+        Users foundUser = userService.verifyAndGetIfExists(rentalRequestDTO.getUserId());
         String rentStatus = "Não devolvido";
 
         Rental rentToSave = rentalMapper.toModel(rentalRequestDTO);
         rentToSave.setBook(foundBook);
-        rentToSave.setUsers(foundAuthenticatedUser);
+        rentToSave.setUsers(foundUser);
         rentToSave.setReturnDate(rentStatus);
         verifyIfExists(rentToSave.getBook(), rentToSave.getUsers());
 
