@@ -40,7 +40,6 @@ public class RentalService {
 
     public RentalResponseDTO create(AuthenticatedUser authenticatedUser, RentalRequestDTO rentalRequestDTO) {
         Users foundAuthenticatedUser = userService.verifyAndGetUserIfExists(authenticatedUser.getUsername());
-        if(foundAuthenticatedUser.getRole().toString().equals("ADMIN")) throw new RentalCreationNotAllowed();
 
         Book foundBook = bookService.verifyAndGetIfExists(rentalRequestDTO.getBookId());
         String rentStatus = "Não devolvido";
