@@ -74,7 +74,7 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    public UserDTO findById(Long id, AuthenticatedUser authenticatedUser) {
+    public UserDTO findById(Long id) {
         Users foundUser = verifyAndGetIfExists(id);
         return userMapper.toDTO(foundUser);
     }

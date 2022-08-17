@@ -49,14 +49,13 @@ public class RentalService {
         rentToSave.setReturnDate(rentStatus);
         verifyIfExists(rentToSave.getBook(), rentToSave.getUsers());
 
-        Rental savedRent = rentToSave;
         Book alterBook = rentToSave.getBook();
 
-        validateDate(rentalRequestDTO, rentToSave, savedRent);
+        validateDate(rentalRequestDTO, rentToSave, alterBook);
         alterBook.setQuantity(alterBook.getQuantity() - 1);
         alterBook.setRentedQuantity(alterBook.getRentedQuantity() + 1);
 
-        savedRent = rentalRepository.save(rentToSave);
+        Rental savedRent = rentalRepository.save(rentToSave);
         return rentalMapper.toDTO(savedRent);
     }
 
@@ -145,7 +144,7 @@ public class RentalService {
                 .orElseThrow(() -> new RentalNotFoundException(id));
     }
 
-    private void validateDate(RentalRequestDTO rentalRequestDTO, Rental rentToSave, Rental savedRent) {
+    private void validateDate(RentalRequestDTO rentalRequestDTO, Rental rentToSave, Book book) {
         LocalDate today = LocalDate.now();
         if(rentalRequestDTO.getRentalDate().isAfter(today))
             throw new InvalidFutureDateException();
@@ -153,8 +152,8 @@ public class RentalService {
         if(!(rentToSave.getRentalDate().isBefore(rentToSave.getReturnForecast())))
             throw new InvalidDateException();
 
-        if(savedRent.getBook().getQuantity() <= 0)
-            throw new InvalidBookQuantity(savedRent.getBook().getName());
+        if(book.getQuantity() <= 0)
+            throw new InvalidBookQuantity(book.getName());
     }
 }
 
@@ -177,14 +176,13 @@ public RentalResponseDTO create(AuthenticatedUser authenticatedUser, RentalReque
         rentToSave.setReturnDate(rentStatus);
         verifyIfExists(rentToSave.getBook(), rentToSave.getUsers());
 
-        Rental savedRent = rentToSave;
         Book alterBook = rentToSave.getBook();
 
-        validateDate(rentalRequestDTO, rentToSave, savedRent);
+        validateDate(rentalRequestDTO, rentToSave, alterbook);
         alterBook.setQuantity(alterBook.getQuantity() - 1);
         alterBook.setRentedQuantity(alterBook.getRentedQuantity() + 1);
 
-        savedRent = rentalRepository.save(rentToSave);
+        Rental savedRent = rentalRepository.save(rentToSave);
         return rentalMapper.toDTO(savedRent);
     }
  */

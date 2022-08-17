@@ -37,7 +37,7 @@ public interface UserControllerDocs {
             @ApiResponse(code = 200, message = "Success user found"),
             @ApiResponse(code = 404, message = "User not found error code")
     })
-    UserDTO findById(Long id, AuthenticatedUser authenticatedUser);
+    UserDTO findById(Long id);
 
     @ApiOperation(value = "List all registered users")
     @ApiResponses(value = {
