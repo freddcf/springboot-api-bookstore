@@ -2,6 +2,7 @@ package com.fredfonseca.bookstoremanager.config;
 
 import com.fredfonseca.bookstoremanager.users.service.AuthenticationService;
 import com.fredfonseca.bookstoremanager.users.service.JwtTokenManager;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -35,8 +36,12 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         var requestTokenHeader = request.getHeader("Authorization");
         if (isTokenPresent(requestTokenHeader)) {
-            jwtToken = requestTokenHeader.substring(7);
-            username = jwtTokenManager.getUsernameFromToken(jwtToken);
+            try {
+                jwtToken = requestTokenHeader.substring(7);
+                username = jwtTokenManager.getUsernameFromToken(jwtToken);
+            } catch (ExpiredJwtException exception) {
+                logger.warn(exception);
+            }
         } else {
             logger.warn("JWT Token does not begin with Bearer String");
         }
