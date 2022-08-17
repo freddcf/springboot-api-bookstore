@@ -17,7 +17,7 @@ public interface RentalControllerDocs {
             @ApiResponse(code = 201, message = "Success book rent creation"),
             @ApiResponse(code = 400, message = "Missing required fields, wrong field range value or rent already registered on system")
     })
-    RentalResponseDTO create(AuthenticatedUser authenticatedUser, RentalRequestDTO rentalRequestDTO);
+    RentalResponseDTO create(RentalRequestDTO rentalRequestDTO);
 
     @ApiOperation(value = "Find rent by id operation")
     @ApiResponses(value = {

@@ -38,16 +38,14 @@ public class RentalService {
         this.userService = userService;
     }
 
-    public RentalResponseDTO create(AuthenticatedUser authenticatedUser, RentalRequestDTO rentalRequestDTO) {
-        Users foundAuthenticatedUser = userService.verifyAndGetUserIfExists(authenticatedUser.getUsername());
-        if(foundAuthenticatedUser.getRole().toString().equals("ADMIN")) throw new RentalCreationNotAllowed();
-
+    public RentalResponseDTO create(RentalRequestDTO rentalRequestDTO) {
         Book foundBook = bookService.verifyAndGetIfExists(rentalRequestDTO.getBookId());
+        Users foundUser = userService.verifyAndGetIfExists(rentalRequestDTO.getUserId());
         String rentStatus = "Não devolvido";
 
         Rental rentToSave = rentalMapper.toModel(rentalRequestDTO);
         rentToSave.setBook(foundBook);
-        rentToSave.setUsers(foundAuthenticatedUser);
+        rentToSave.setUsers(foundUser);
         rentToSave.setReturnDate(rentStatus);
         verifyIfExists(rentToSave.getBook(), rentToSave.getUsers());
 
@@ -159,3 +157,34 @@ public class RentalService {
             throw new InvalidBookQuantity(savedRent.getBook().getName());
     }
 }
+
+/*
+*--------------------------------------------------------
+* IF WANT TO ALLOW RENT BOOKS PASSING THE USER AS THE
+* AUTHENTICATED USER AND FORBID ADMIN TO RENT BOOKS
+*--------------------------------------------------------
+*
+public RentalResponseDTO create(AuthenticatedUser authenticatedUser, RentalRequestDTO rentalRequestDTO) {
+        Users foundAuthenticatedUser = userService.verifyAndGetUserIfExists(authenticatedUser.getUsername());
+        if(foundAuthenticatedUser.getRole().toString().equals("ADMIN")) throw new RentalCreationNotAllowed();
+
+        Book foundBook = bookService.verifyAndGetIfExists(rentalRequestDTO.getBookId());
+        String rentStatus = "Não devolvido";
+
+        Rental rentToSave = rentalMapper.toModel(rentalRequestDTO);
+        rentToSave.setBook(foundBook);
+        rentToSave.setUsers(foundAuthenticatedUser);
+        rentToSave.setReturnDate(rentStatus);
+        verifyIfExists(rentToSave.getBook(), rentToSave.getUsers());
+
+        Rental savedRent = rentToSave;
+        Book alterBook = rentToSave.getBook();
+
+        validateDate(rentalRequestDTO, rentToSave, savedRent);
+        alterBook.setQuantity(alterBook.getQuantity() - 1);
+        alterBook.setRentedQuantity(alterBook.getRentedQuantity() + 1);
+
+        savedRent = rentalRepository.save(rentToSave);
+        return rentalMapper.toDTO(savedRent);
+    }
+ */
