@@ -1,0 +1,744 @@
+{
+	"info": {
+		"_postman_id": "d4c2f25b-2f6f-4b78-868d-8e154cd14251",
+		"name": "Bookstore Manager",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "22342991"
+	},
+	"item": [
+		{
+			"name": "Publishers",
+			"item": [
+				{
+					"name": "POST publisher",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwtToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Amazon Bks\",\r\n    \"city\": \"Recife\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/v1/publishers",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"publishers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET publisher by id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwtToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/v1/publishers/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"publishers",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET all publishers",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/v1/publishers?size=4&page=0",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"publishers"
+							],
+							"query": [
+								{
+									"key": "size",
+									"value": "4"
+								},
+								{
+									"key": "page",
+									"value": "0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE publisher",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwtToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/v1/publishers/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"publishers",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT publishers",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwtToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Amazon Bks\",\r\n    \"city\": \"Rio de Janeiro\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/v1/publishers/4",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"publishers",
+								"4"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Books",
+			"item": [
+				{
+					"name": "POST books",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwtToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Turma da Mônica no parque\",\r\n    \"quantity\": 46,\r\n    \"launchDate\": \"2021-08-17\",\r\n    \"author\": \"Ingid\",\r\n    \"publisherId\": 3\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/v1/books",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"books"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET book by id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwtToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/v1/books/4",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"books",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET all books",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/v1/books?size=4&page=0",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"books"
+							],
+							"query": [
+								{
+									"key": "size",
+									"value": "4"
+								},
+								{
+									"key": "page",
+									"value": "0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE book",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwtToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/v1/books/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"books",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT books",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwtToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Maizum\",\r\n    \"quantity\": 100,\r\n    \"rentedQuantity\": 0,\r\n    \"launchDate\": \"2022-08-17\",\r\n    \"author\": \"Junior Lira\",\r\n    \"publisherId\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/v1/books/10",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"books",
+								"10"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "POST user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"fred\",\r\n    \"email\": \"fred@gmail.com\",\r\n    \"city\": \"Fortaleza\",\r\n    \"address\": \"Rua José Dias, 143\",\r\n    \"username\": \"fred\",\r\n    \"password\": \"admin\",\r\n    \"role\": \"USER\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/v1/users",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwtToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/v1/users/3",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwtToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Lucas Faria\",\r\n    \"email\": \"lucasfaria@gmail.com\",\r\n    \"city\": \"Fortaleza\",\r\n    \"address\": \"Rua José Dias, 143\",\r\n    \"username\": \"lucas\",\r\n    \"password\": \"admin\",\r\n    \"role\": \"USER\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/v1/users/13",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"13"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET user by id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwtToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/v1/users/3",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET all users",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/v1/users?size=4&page=0",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users"
+							],
+							"query": [
+								{
+									"key": "size",
+									"value": "4"
+								},
+								{
+									"key": "page",
+									"value": "0"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Rental",
+			"item": [
+				{
+					"name": "POST rent",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwtToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"bookId\": 12,\r\n    \"userId\": 2,\r\n    \"rentalDate\": \"2022-08-13\",\r\n    \"returnForecast\": \"2022-11-22\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/v1/rentals",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"rentals"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET rent by id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwtToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/v1/rentals/11",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"rentals",
+								"11"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET all rentals",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwtToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/v1/rentals?size=5&page=0",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"rentals"
+							],
+							"query": [
+								{
+									"key": "size",
+									"value": "5"
+								},
+								{
+									"key": "page",
+									"value": "0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE rental",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwtToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/v1/rentals/8",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"rentals",
+								"8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT rentals",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwtToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"returnDate\": \"2022-10-02\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/v1/rentals/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"rentals",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Authenticate user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"pm.environment.set(\"jwtToken\", jsonData.jwtToken);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"jojo\",\r\n    \"password\": \"admin\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/api/v1/users/authenticate",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"users",
+						"authenticate"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
