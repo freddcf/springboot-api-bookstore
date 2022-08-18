@@ -52,7 +52,9 @@ public class PublisherService {
 
     public void delete(Long id) {
         Publisher publisherToDelete = verifyAndGetIfExists(id);
-        if(bookRepository.findByPublisher(publisherToDelete).isEmpty()) throw new DeleteDeniedException();
+        if (!bookRepository.findByPublisher(publisherToDelete).isEmpty()) {
+            throw new DeleteDeniedException();
+        }
         publisherRepository.deleteById(id);
     }
 
@@ -74,14 +76,17 @@ public class PublisherService {
         Optional<Publisher> samePublisher = publisherRepository
                 .findByName(name);
 
-        if(samePublisher.isPresent() && samePublisher.get().getId() != id)
+        if (samePublisher.isPresent() && samePublisher.get().getId() != id) {
             throw new PublisherAlreadyExistsException(name);
+        }
     }
 
     private void verifyIfExists(String name) {
         Optional<Publisher> duplicatedPublisher = publisherRepository
                 .findByName(name);
-        if(duplicatedPublisher.isPresent()) throw new PublisherAlreadyExistsException(name);
+        if (duplicatedPublisher.isPresent()) {
+            throw new PublisherAlreadyExistsException(name);
+        }
     }
 
     public Publisher verifyAndGetIfExists(Long id) {

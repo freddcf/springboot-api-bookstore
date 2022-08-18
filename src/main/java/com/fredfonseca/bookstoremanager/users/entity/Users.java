@@ -37,7 +37,7 @@ public class Users {
     @Column(nullable = false, length = 20)
     private Role role;
 
-    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "users", fetch = FetchType.LAZY)
     private List<Rental> rentals;
 }
 
