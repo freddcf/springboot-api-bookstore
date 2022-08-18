@@ -31,10 +31,9 @@ public class Book {
     @Column(nullable = false)
     private String author;
 
-    @ManyToOne
-    @JoinColumn(name = "publisher_id")
+    @ManyToOne(cascade = {CascadeType.MERGE})
     private Publisher publisher;
 
-    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "book", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private List<Rental> rentals;
 }

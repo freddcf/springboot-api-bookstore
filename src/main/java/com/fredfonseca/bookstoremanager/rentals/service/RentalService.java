@@ -61,7 +61,7 @@ public class RentalService {
 
     public RentalResponseDTO findById(Long id, AuthenticatedUser authenticatedUser) {
         Users foundAuthenticatedUser = userService.verifyAndGetUserIfExists(authenticatedUser.getUsername());
-        if(isAdmin(foundAuthenticatedUser)) {
+        if (isAdmin(foundAuthenticatedUser)) {
             return rentalRepository.findById(id)
                     .map(rentalMapper::toDTO)
                     .orElseThrow(() -> new RentalNotFoundException(id));
@@ -73,9 +73,8 @@ public class RentalService {
 
     public Page<RentalResponseDTO> findAll(AuthenticatedUser authenticatedUser, Pageable pageable) {
         Users foundAuthenticatedUser = userService.verifyAndGetUserIfExists(authenticatedUser.getUsername());
-        if(isAdmin(foundAuthenticatedUser)) {
-            return rentalRepository.findAll(pageable)
-                    .map(rentalMapper::toDTO);
+        if (isAdmin(foundAuthenticatedUser)) {
+            return rentalRepository.findAll(pageable).map(rentalMapper::toDTO);
         }
         return rentalRepository.findAllByUsers(foundAuthenticatedUser, pageable)
                 .map(rentalMapper::toDTO);
@@ -112,9 +111,12 @@ public class RentalService {
     }
 
     private void checkChangeStatusPermission(String foundUsername, Users authenticatedUser) {
-        if(isAdmin(authenticatedUser)) return;
-        if(!foundUsername.equals(authenticatedUser.getUsername()))
+        if (isAdmin(authenticatedUser)) {
+            return;
+        }
+        if (!foundUsername.equals(authenticatedUser.getUsername())) {
             throw new RentalChangeNotAllowedException();
+        }
     }
 
     private String validateReturnDate(RentalRequestUpdateDTO rentalRequestUpdateDTO, Rental foundRental) {
@@ -123,12 +125,16 @@ public class RentalService {
         LocalDate rentalDate = foundRental.getRentalDate();
         LocalDate returnForecast = foundRental.getReturnForecast();
 
-        if(returnDate.isBefore(rentalDate))
+        if (returnDate.isBefore(rentalDate)) {
             throw new InvalidReturnDateException(rentalDate, returnDate);
+        }
 
-        if(returnDate.isAfter(returnForecast)) rentStatus = returnDate + " (Com atraso)";
-        if(returnDate.isBefore(returnForecast) || returnDate.isEqual(returnForecast))
+        if (returnDate.isAfter(returnForecast)) {
+            rentStatus = returnDate + " (Com atraso)";
+        }
+        if (returnDate.isBefore(returnForecast) || returnDate.isEqual(returnForecast)) {
             rentStatus = returnDate + " (No prazo)";
+        }
         return rentStatus;
     }
 
@@ -136,7 +142,9 @@ public class RentalService {
 
         List<Rental> duplicatedRent = rentalRepository
                 .findByBookAndUsers(book, user);
-        if(!duplicatedRent.isEmpty()) throw new RentalAlreadyExistsException(book.getName(), user.getName());
+        if (!duplicatedRent.isEmpty()) {
+            throw new RentalAlreadyExistsException(book.getName(), user.getName());
+        }
     }
 
     private Rental verifyIfExists(Long id) {
@@ -146,43 +154,16 @@ public class RentalService {
 
     private void validateDate(RentalRequestDTO rentalRequestDTO, Rental rentToSave, Book book) {
         LocalDate today = LocalDate.now();
-        if(rentalRequestDTO.getRentalDate().isAfter(today))
+        if (rentalRequestDTO.getRentalDate().isAfter(today)) {
             throw new InvalidFutureDateException();
+        }
 
-        if(!(rentToSave.getRentalDate().isBefore(rentToSave.getReturnForecast())))
+        if (!(rentToSave.getRentalDate().isBefore(rentToSave.getReturnForecast()))) {
             throw new InvalidDateException();
+        }
 
-        if(book.getQuantity() <= 0)
+        if (book.getQuantity() <= 0) {
             throw new InvalidBookQuantity(book.getName());
+        }
     }
 }
-
-/*
-*--------------------------------------------------------
-* IF WANT TO ALLOW RENT BOOKS PASSING THE USER AS THE
-* AUTHENTICATED USER AND FORBID ADMIN TO RENT BOOKS
-*--------------------------------------------------------
-*
-public RentalResponseDTO create(AuthenticatedUser authenticatedUser, RentalRequestDTO rentalRequestDTO) {
-        Users foundAuthenticatedUser = userService.verifyAndGetUserIfExists(authenticatedUser.getUsername());
-        if(foundAuthenticatedUser.getRole().toString().equals("ADMIN")) throw new RentalCreationNotAllowed();
-
-        Book foundBook = bookService.verifyAndGetIfExists(rentalRequestDTO.getBookId());
-        String rentStatus = "Não devolvido";
-
-        Rental rentToSave = rentalMapper.toModel(rentalRequestDTO);
-        rentToSave.setBook(foundBook);
-        rentToSave.setUsers(foundAuthenticatedUser);
-        rentToSave.setReturnDate(rentStatus);
-        verifyIfExists(rentToSave.getBook(), rentToSave.getUsers());
-
-        Book alterBook = rentToSave.getBook();
-
-        validateDate(rentalRequestDTO, rentToSave, alterbook);
-        alterBook.setQuantity(alterBook.getQuantity() - 1);
-        alterBook.setRentedQuantity(alterBook.getRentedQuantity() + 1);
-
-        Rental savedRent = rentalRepository.save(rentToSave);
-        return rentalMapper.toDTO(savedRent);
-    }
- */
