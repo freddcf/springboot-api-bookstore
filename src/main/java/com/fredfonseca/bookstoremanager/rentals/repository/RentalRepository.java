@@ -14,12 +14,11 @@ public interface RentalRepository extends JpaRepository<Rental, Long> {
 
     List<Rental> findByBookAndUsers(Object book, Object user);
 
-    Optional<Rental> findByBook(Book book);
+    List<Rental> findByBook(Book book);
 
-    Optional<Rental> findByUsers(Users user);
+    List<Rental> findByUsers(Users user);
 
     Optional<Rental> findByIdAndUsers(Long id, Users user);
 
-    List<Rental> findAllByUsers(Users user);
     Page<Rental> findAllByUsers(Users user, Pageable pageable);
 }
