@@ -63,7 +63,7 @@ public class BookService {
 
     public void delete(Long id) {
         Book bookToDelete = verifyAndGetIfExists(id);
-        if(rentalRepository.findByBook(bookToDelete).isPresent()) throw new DeleteDeniedException();
+        if(rentalRepository.findByBook(bookToDelete).isEmpty()) throw new DeleteDeniedException();
         bookRepository.deleteById(id);
     }
 

@@ -52,7 +52,7 @@ public class PublisherService {
 
     public void delete(Long id) {
         Publisher publisherToDelete = verifyAndGetIfExists(id);
-        if(bookRepository.findByPublisher(publisherToDelete).isPresent()) throw new DeleteDeniedException();
+        if(bookRepository.findByPublisher(publisherToDelete).isEmpty()) throw new DeleteDeniedException();
         publisherRepository.deleteById(id);
     }
 

@@ -69,7 +69,7 @@ public class UserService {
 
         checkDeleteStatusPermission(foundAuthenticatedUser, userToDelete);
 
-        if(rentalRepository.findByUsers(userToDelete).isPresent())
+        if(rentalRepository.findByUsers(userToDelete).isEmpty())
             throw new DeleteDeniedException();
         userRepository.deleteById(id);
     }
