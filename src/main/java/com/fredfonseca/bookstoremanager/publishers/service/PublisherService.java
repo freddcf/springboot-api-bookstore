@@ -51,13 +51,13 @@ public class PublisherService {
     }
 
     public void delete(Long id) {
-        Publisher publisherToDelete = verifyAndGetPublisher(id);
+        Publisher publisherToDelete = verifyAndGetIfExists(id);
         if(bookRepository.findByPublisher(publisherToDelete).isPresent()) throw new DeleteDeniedException();
         publisherRepository.deleteById(id);
     }
 
     public PublisherResponseDTO update(Long id, PublisherRequestDTO publisherToUpdateDTO) {
-        Publisher foundPublisher = verifyAndGetPublisher(id);
+        Publisher foundPublisher = verifyAndGetIfExists(id);
         publisherToUpdateDTO.setId(foundPublisher.getId());
 
         verifyIfExists(publisherToUpdateDTO.getId(), publisherToUpdateDTO.getName());
@@ -82,11 +82,6 @@ public class PublisherService {
         Optional<Publisher> duplicatedPublisher = publisherRepository
                 .findByName(name);
         if(duplicatedPublisher.isPresent()) throw new PublisherAlreadyExistsException(name);
-    }
-
-    private Publisher verifyAndGetPublisher(Long id) {
-        return publisherRepository.findById(id)
-                .orElseThrow(() -> new PublisherNotFoundException(id));
     }
 
     public Publisher verifyAndGetIfExists(Long id) {
