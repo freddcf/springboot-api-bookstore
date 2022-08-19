@@ -96,6 +96,8 @@ public class UserService {
 
     private void checkChangeStatusPermission(UserDTO userToUpdateDTO, Users authenticatedUser, Users foundUser) {
         if (isAdmin(authenticatedUser)) {
+            validateCredentialsChange(foundUser.getEmail(), foundUser.getUsername(),
+                    userToUpdateDTO.getEmail(), userToUpdateDTO.getUsername(), true);
             return;
         }
         if (!authenticatedUser.equals(foundUser)) {
@@ -105,7 +107,8 @@ public class UserService {
             throw new UserCredentialsChangeNotAllowed();
         }
         validateCredentialsChange(foundUser.getEmail(), foundUser.getUsername(),
-                userToUpdateDTO.getEmail(), userToUpdateDTO.getUsername());
+                userToUpdateDTO.getEmail(), userToUpdateDTO.getUsername(), false);
+
     }
 
     private void checkDeleteStatusPermission(Users foundAuthenticatedUser, Users userToDelete) {
@@ -117,15 +120,17 @@ public class UserService {
         }
     }
 
-    private void validateCredentialsChange(String currEmail, String currUsername, String newEmail, String newUsername) {
+    private void validateCredentialsChange(String currEmail, String currUsername, String newEmail, String newUsername, boolean isAdmin) {
         if (!currEmail.equals(newEmail) && !currUsername.equals(newUsername)) {
             throw new InvalidCredentialsChange();
         }
         if (!currEmail.equals(newEmail)) {
             verifyIfEmailExists(newEmail);
         }
-        if (!currUsername.equals(newUsername)) {
-            verifyIfUsernameExists(newUsername);
+        if (isAdmin) {
+            if (!currUsername.equals(newUsername)) {
+                verifyIfUsernameExists(newUsername);
+            }
         }
     }
 
