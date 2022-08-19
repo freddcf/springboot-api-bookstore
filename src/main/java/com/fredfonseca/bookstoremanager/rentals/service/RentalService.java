@@ -6,11 +6,13 @@ import com.fredfonseca.bookstoremanager.rentals.dto.RentalRequestDTO;
 import com.fredfonseca.bookstoremanager.rentals.dto.RentalRequestUpdateDTO;
 import com.fredfonseca.bookstoremanager.rentals.dto.RentalResponseDTO;
 import com.fredfonseca.bookstoremanager.rentals.entity.Rental;
+import com.fredfonseca.bookstoremanager.rentals.enums.RentalReturnStates;
 import com.fredfonseca.bookstoremanager.rentals.exception.*;
 import com.fredfonseca.bookstoremanager.rentals.mapper.RentalMapper;
 import com.fredfonseca.bookstoremanager.rentals.repository.RentalRepository;
 import com.fredfonseca.bookstoremanager.users.dto.AuthenticatedUser;
 import com.fredfonseca.bookstoremanager.users.entity.Users;
+import com.fredfonseca.bookstoremanager.users.enums.Role;
 import com.fredfonseca.bookstoremanager.users.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -31,6 +33,11 @@ public class RentalService {
 
     private UserService userService;
 
+    private final String ROLE_ADMIN = Role.ADMIN.getDescription();
+    private final String RENTAL_DEFAULT = RentalReturnStates.INITIAL_VALUE.getDescription();
+    private final String RENTAL_RETURNED_EARLY = RentalReturnStates.EARLY.getDescription();
+    private final String RENTAL_RETURNED_LATE = RentalReturnStates.LATE.getDescription();
+
     @Autowired
     public RentalService(RentalRepository rentalRepository, BookService bookService, UserService userService) {
         this.rentalRepository = rentalRepository;
@@ -41,7 +48,7 @@ public class RentalService {
     public RentalResponseDTO create(RentalRequestDTO rentalRequestDTO) {
         Book foundBook = bookService.verifyAndGetIfExists(rentalRequestDTO.getBookId());
         Users foundUser = userService.verifyAndGetIfExists(rentalRequestDTO.getUserId());
-        String rentStatus = "Não devolvido";
+        String rentStatus = RENTAL_DEFAULT;
 
         Rental rentToSave = rentalMapper.toModel(rentalRequestDTO);
         rentToSave.setBook(foundBook);
@@ -86,7 +93,7 @@ public class RentalService {
 
         checkChangeStatusPermission(rentalToDelete.getUsers().getUsername(), foundAuthenticatedUser);
 
-        if(rentalToDelete.getReturnDate().equals("Não devolvido")) {
+        if(rentalToDelete.getReturnDate().equals(RENTAL_DEFAULT)) {
             returnBookToStock(rentalToDelete.getBook());
         }
 
@@ -99,7 +106,7 @@ public class RentalService {
 
         checkChangeStatusPermission(foundRental.getUsers().getUsername(), foundAuthenticatedUser);
 
-        if(!foundRental.getReturnDate().equals("Não devolvido")){
+        if(!foundRental.getReturnDate().equals(RENTAL_DEFAULT)){
             throw new BookAlreadyReturnedException(foundRental.getUsers().getName(), foundRental.getBook().getName());
         }
 
@@ -112,7 +119,7 @@ public class RentalService {
     }
 
     private boolean isAdmin(Users foundAuthenticatedUser) {
-        return foundAuthenticatedUser.getRole().toString().equals("ADMIN");
+        return foundAuthenticatedUser.getRole().toString().equals(ROLE_ADMIN);
     }
 
     private void checkChangeStatusPermission(String foundUsername, Users authenticatedUser) {
@@ -133,12 +140,11 @@ public class RentalService {
         if (returnDate.isBefore(rentalDate)) {
             throw new InvalidReturnDateException(rentalDate, returnDate);
         }
-
         if (returnDate.isAfter(returnForecast)) {
-            rentStatus = returnDate + " (Com atraso)";
+            rentStatus = returnDate + " " + RENTAL_RETURNED_LATE;
         }
         if (returnDate.isBefore(returnForecast) || returnDate.isEqual(returnForecast)) {
-            rentStatus = returnDate + " (No prazo)";
+            rentStatus = returnDate + " " + RENTAL_RETURNED_EARLY;
         }
         return rentStatus;
     }
