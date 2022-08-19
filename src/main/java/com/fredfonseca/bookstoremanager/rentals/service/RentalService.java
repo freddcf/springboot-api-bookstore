@@ -51,7 +51,7 @@ public class RentalService {
 
         Book alterBook = rentToSave.getBook();
 
-        validateDate(rentalRequestDTO, rentToSave, alterBook);
+        validateData(rentalRequestDTO, rentToSave, alterBook);
         alterBook.setQuantity(alterBook.getQuantity() - 1);
         alterBook.setRentedQuantity(alterBook.getRentedQuantity() + 1);
 
@@ -86,9 +86,9 @@ public class RentalService {
 
         checkChangeStatusPermission(rentalToDelete.getUsers().getUsername(), foundAuthenticatedUser);
 
-        Book alterBook = rentalToDelete.getBook();
-        alterBook.setQuantity(alterBook.getQuantity() + 1);
-        alterBook.setRentedQuantity(alterBook.getRentedQuantity() - 1);
+        if(rentalToDelete.getReturnDate().equals("Não devolvido")) {
+            returnBookToStock(rentalToDelete.getBook());
+        }
 
         rentalRepository.deleteById(id);
     }
@@ -99,8 +99,13 @@ public class RentalService {
 
         checkChangeStatusPermission(foundRental.getUsers().getUsername(), foundAuthenticatedUser);
 
+        if(!foundRental.getReturnDate().equals("Não devolvido")){
+            throw new BookAlreadyReturnedException(foundRental.getUsers().getName(), foundRental.getBook().getName());
+        }
+
         Rental rentToSave = foundRental;
         rentToSave.setReturnDate(validateReturnDate(rentalRequestUpdateDTO, foundRental));
+        returnBookToStock(rentToSave.getBook());
 
         Rental savedRent = rentalRepository.save(rentToSave);
         return rentalMapper.toDTO(savedRent);
@@ -138,6 +143,12 @@ public class RentalService {
         return rentStatus;
     }
 
+    private void returnBookToStock(Book book) {
+        Book alterBook = book;
+        alterBook.setQuantity(alterBook.getQuantity() + 1);
+        alterBook.setRentedQuantity(alterBook.getRentedQuantity() - 1);
+    }
+
     private void verifyIfExists(Book book, Users user) {
 
         List<Rental> duplicatedRent = rentalRepository
@@ -152,7 +163,7 @@ public class RentalService {
                 .orElseThrow(() -> new RentalNotFoundException(id));
     }
 
-    private void validateDate(RentalRequestDTO rentalRequestDTO, Rental rentToSave, Book book) {
+    private void validateData(RentalRequestDTO rentalRequestDTO, Rental rentToSave, Book book) {
         LocalDate today = LocalDate.now();
         if (rentalRequestDTO.getRentalDate().isAfter(today)) {
             throw new InvalidFutureDateException();
