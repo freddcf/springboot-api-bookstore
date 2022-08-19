@@ -45,9 +45,13 @@ public class RentalService {
         this.userService = userService;
     }
 
-    public RentalResponseDTO create(RentalRequestDTO rentalRequestDTO) {
+    public RentalResponseDTO create(AuthenticatedUser authenticatedUser, RentalRequestDTO rentalRequestDTO) {
         Book foundBook = bookService.verifyAndGetIfExists(rentalRequestDTO.getBookId());
+        Users foundAuthenticatedUser = userService.verifyAndGetUserIfExists(authenticatedUser.getUsername());
         Users foundUser = userService.verifyAndGetIfExists(rentalRequestDTO.getUserId());
+        if(!isAdmin(foundAuthenticatedUser)) {
+            foundUser = foundAuthenticatedUser;
+        }
         String rentStatus = RENTAL_DEFAULT;
 
         Rental rentToSave = rentalMapper.toModel(rentalRequestDTO);
@@ -118,8 +122,8 @@ public class RentalService {
         return rentalMapper.toDTO(savedRent);
     }
 
-    private boolean isAdmin(Users foundAuthenticatedUser) {
-        return foundAuthenticatedUser.getRole().toString().equals(ROLE_ADMIN);
+    private boolean isAdmin(Users user) {
+        return user.getRole().toString().equals(ROLE_ADMIN);
     }
 
     private void checkChangeStatusPermission(String foundUsername, Users authenticatedUser) {
