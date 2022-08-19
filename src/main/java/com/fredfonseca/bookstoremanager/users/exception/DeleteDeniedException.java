@@ -7,7 +7,11 @@ public class DeleteDeniedException extends EntityExistsException {
         super("Delete command denied! This user object is linked to a Rental!");
     }
 
-    public DeleteDeniedException(String userName) {
-        super(String.format("You are not allowed to delete the account of %s", userName));
+    public DeleteDeniedException(String name) {
+        super(String.format("You are not allowed to delete the account of %s", name));
+    }
+
+    public DeleteDeniedException(String name, String role) {
+        super(String.format("Sorry, %s a logged %s cannot delete itself...", name, role));
     }
 }
