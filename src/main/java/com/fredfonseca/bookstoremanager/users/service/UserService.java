@@ -5,6 +5,7 @@ import com.fredfonseca.bookstoremanager.users.dto.AuthenticatedUser;
 import com.fredfonseca.bookstoremanager.users.dto.MessageDTO;
 import com.fredfonseca.bookstoremanager.users.dto.UserDTO;
 import com.fredfonseca.bookstoremanager.users.entity.Users;
+import com.fredfonseca.bookstoremanager.users.enums.Role;
 import com.fredfonseca.bookstoremanager.users.exception.*;
 import com.fredfonseca.bookstoremanager.users.mapper.UserMapper;
 import com.fredfonseca.bookstoremanager.users.repository.UserRepository;
@@ -29,6 +30,8 @@ public class UserService {
     private RentalRepository rentalRepository;
 
     private PasswordEncoder passwordEncoder;
+
+    private final String ROLE_ADMIN = Role.ADMIN.getDescription();
 
     @Autowired
     public UserService(UserRepository userRepository,
@@ -69,8 +72,12 @@ public class UserService {
 
         checkDeleteStatusPermission(foundAuthenticatedUser, userToDelete);
 
-        if(rentalRepository.findByUsers(userToDelete).isPresent())
+        if (!rentalRepository.findByUsers(userToDelete).isEmpty()) {
             throw new DeleteDeniedException();
+        }
+        if (userToDelete.equals(foundAuthenticatedUser)) {
+            throw new DeleteDeniedException(foundAuthenticatedUser.getName(), foundAuthenticatedUser.getRole().getDescription());
+        }
         userRepository.deleteById(id);
     }
 
@@ -90,42 +97,61 @@ public class UserService {
     }
 
     private boolean isAdmin(Users foundAuthenticatedUser) {
-        return foundAuthenticatedUser.getRole().toString().equals("ADMIN");
+        return foundAuthenticatedUser.getRole().toString().equals(ROLE_ADMIN);
     }
 
     private void checkChangeStatusPermission(UserDTO userToUpdateDTO, Users authenticatedUser, Users foundUser) {
-        if(isAdmin(authenticatedUser)) return;
-        if(!authenticatedUser.equals(foundUser))
+        if (isAdmin(authenticatedUser)) {
+            validateCredentialsChange(foundUser.getEmail(), foundUser.getUsername(),
+                    userToUpdateDTO.getEmail(), userToUpdateDTO.getUsername(), true);
+            return;
+        }
+        if (!authenticatedUser.equals(foundUser)) {
             throw new InvalidCredentialsChange(foundUser.getName());
-        if(!passwordEncoder.matches(userToUpdateDTO.getPassword(), foundUser.getPassword()))
+        }
+        if (!passwordEncoder.matches(userToUpdateDTO.getPassword(), foundUser.getPassword())) {
             throw new UserCredentialsChangeNotAllowed();
+        }
         validateCredentialsChange(foundUser.getEmail(), foundUser.getUsername(),
-                userToUpdateDTO.getEmail(), userToUpdateDTO.getUsername());
+                userToUpdateDTO.getEmail(), userToUpdateDTO.getUsername(), false);
+
     }
 
     private void checkDeleteStatusPermission(Users foundAuthenticatedUser, Users userToDelete) {
-        if(isAdmin(foundAuthenticatedUser)) return;
-        if(!foundAuthenticatedUser.equals(userToDelete))
+        if (isAdmin(foundAuthenticatedUser)) {
+            return;
+        }
+        if (!foundAuthenticatedUser.equals(userToDelete)) {
             throw new DeleteDeniedException(userToDelete.getName());
+        }
     }
 
-    private void validateCredentialsChange(String currEmail, String currUsername, String newEmail, String newUsername) {
-        if(!currEmail.equals(newEmail) && !currUsername.equals(newUsername))
+    private void validateCredentialsChange(String currEmail, String currUsername, String newEmail, String newUsername, boolean isAdmin) {
+        if (!currEmail.equals(newEmail) && !currUsername.equals(newUsername)) {
             throw new InvalidCredentialsChange();
-
-        if(!currEmail.equals(newEmail)) verifyIfEmailExists(newEmail);
-
-        if(!currUsername.equals(newUsername)) verifyIfUsernameExists(newUsername);
+        }
+        if (!currEmail.equals(newEmail)) {
+            verifyIfEmailExists(newEmail);
+        }
+        if (isAdmin) {
+            if (!currUsername.equals(newUsername)) {
+                verifyIfUsernameExists(newUsername);
+            }
+        }
     }
 
     private void verifyIfEmailExists(String email) {
         Optional<Users> foundUser = userRepository.findByEmail(email);
-        if (foundUser.isPresent()) throw new UserEmailAlreadyExistsException(email);
+        if (foundUser.isPresent()) {
+            throw new UserEmailAlreadyExistsException(email);
+        }
     }
 
     private void verifyIfUsernameExists(String username) {
         Optional<Users> foundUser = userRepository.findByUsername(username);
-        if (foundUser.isPresent()) throw new UsernameAlreadyExistsException(username);
+        if (foundUser.isPresent()) {
+            throw new UsernameAlreadyExistsException(username);
+        }
     }
 
     public Users verifyAndGetUserIfExists(String username) {

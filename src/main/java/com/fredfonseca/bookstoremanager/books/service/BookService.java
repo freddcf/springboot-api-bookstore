@@ -63,7 +63,9 @@ public class BookService {
 
     public void delete(Long id) {
         Book bookToDelete = verifyAndGetIfExists(id);
-        if(rentalRepository.findByBook(bookToDelete).isPresent()) throw new DeleteDeniedException();
+        if (!rentalRepository.findByBook(bookToDelete).isEmpty()) {
+            throw new DeleteDeniedException();
+        }
         bookRepository.deleteById(id);
     }
 
@@ -88,12 +90,15 @@ public class BookService {
     private void verifyIfExists(String name) {
         Optional<Book> duplicatedBook = bookRepository
                 .findByName(name);
-        if(duplicatedBook.isPresent()) throw new BookAlreadyExistsException(name);
+        if (duplicatedBook.isPresent()) {
+            throw new BookAlreadyExistsException(name);
+        }
     }
 
     private void validateDate(BookRequestDTO bookRequestDTO) {
         LocalDate today = LocalDate.now();
-        if(bookRequestDTO.getLaunchDate().isAfter(today))
+        if (bookRequestDTO.getLaunchDate().isAfter(today)) {
             throw new InvalidDateException();
+        }
     }
 }
