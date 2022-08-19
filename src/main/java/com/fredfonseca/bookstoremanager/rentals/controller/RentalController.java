@@ -27,8 +27,8 @@ public class RentalController implements RentalControllerDocs{
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public RentalResponseDTO create(@RequestBody @Valid RentalRequestDTO rentalRequestDTO) {
-        return rentalService.create(rentalRequestDTO);
+    public RentalResponseDTO create(@AuthenticationPrincipal AuthenticatedUser authenticatedUser, @RequestBody @Valid RentalRequestDTO rentalRequestDTO) {
+        return rentalService.create(authenticatedUser, rentalRequestDTO);
     }
 
     @GetMapping("/{id}")
