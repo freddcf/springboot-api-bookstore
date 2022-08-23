@@ -47,7 +47,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         }
 
         if (isUsernameInContext(username)) {
-            addUsernameInContext(request, username, jwtToken);
+            try {
+                addUsernameInContext(request, username, jwtToken);
+            } catch (Exception e) {
+                logger.warn(e);
+            }
         }
         filterChain.doFilter(request, response);
     }
