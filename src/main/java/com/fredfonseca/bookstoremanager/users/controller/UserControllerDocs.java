@@ -51,4 +51,11 @@ public interface UserControllerDocs {
             @ApiResponse(code = 404, message = "User not found")
     })
     JwtResponse createAuthenticationToken(JwtRequest jwtRequest);
+
+    @ApiOperation(value = "User recover data operation")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success user found"),
+            @ApiResponse(code = 404, message = "User not found")
+    })
+    MessageDTO recoverUserData(RecoverUserInfo recoverUserInfo);
 }

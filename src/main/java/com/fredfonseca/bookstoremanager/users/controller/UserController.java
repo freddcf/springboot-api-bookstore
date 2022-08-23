@@ -2,6 +2,7 @@ package com.fredfonseca.bookstoremanager.users.controller;
 
 import com.fredfonseca.bookstoremanager.users.dto.*;
 import com.fredfonseca.bookstoremanager.users.service.AuthenticationService;
+import com.fredfonseca.bookstoremanager.users.service.RecoverUserDataService;
 import com.fredfonseca.bookstoremanager.users.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,10 +22,13 @@ public class UserController implements UserControllerDocs{
 
     private AuthenticationService authenticationService;
 
+    private RecoverUserDataService recoverUserDataService;
+
     @Autowired
-    public UserController(UserService userService, AuthenticationService authenticationService) {
+    public UserController(UserService userService, AuthenticationService authenticationService, RecoverUserDataService recoverUserDataService) {
         this.userService = userService;
         this.authenticationService = authenticationService;
+        this.recoverUserDataService = recoverUserDataService;
     }
 
     @PostMapping
@@ -57,5 +61,10 @@ public class UserController implements UserControllerDocs{
     @PostMapping(value = "/authenticate")
     public JwtResponse createAuthenticationToken(@RequestBody @Valid JwtRequest jwtRequest) {
         return authenticationService.createAuthenticationToken(jwtRequest);
+    }
+
+    @PostMapping(value = "/recover")
+    public MessageDTO recoverUserData(@RequestBody @Valid RecoverUserInfo recoverUserInfo) {
+        return recoverUserDataService.recoverUserData(recoverUserInfo);
     }
 }

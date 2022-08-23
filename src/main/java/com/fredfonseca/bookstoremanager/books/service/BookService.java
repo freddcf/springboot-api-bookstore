@@ -3,10 +3,7 @@ package com.fredfonseca.bookstoremanager.books.service;
 import com.fredfonseca.bookstoremanager.books.dto.BookRequestDTO;
 import com.fredfonseca.bookstoremanager.books.dto.BookResponseDTO;
 import com.fredfonseca.bookstoremanager.books.entity.Book;
-import com.fredfonseca.bookstoremanager.books.exception.BookAlreadyExistsException;
-import com.fredfonseca.bookstoremanager.books.exception.BookNotFoundException;
-import com.fredfonseca.bookstoremanager.books.exception.DeleteDeniedException;
-import com.fredfonseca.bookstoremanager.books.exception.InvalidDateException;
+import com.fredfonseca.bookstoremanager.books.exception.*;
 import com.fredfonseca.bookstoremanager.books.mapper.BookMapper;
 import com.fredfonseca.bookstoremanager.books.repository.BookRepository;
 import com.fredfonseca.bookstoremanager.publishers.entity.Publisher;
@@ -42,6 +39,10 @@ public class BookService {
         verifyIfExists(bookRequestDTO.getName());
         Publisher foundPublisher = publisherService.verifyAndGetIfExists(bookRequestDTO.getPublisherId());
         validateDate(bookRequestDTO);
+
+        if(bookRequestDTO.getQuantity() < 0) {
+            throw new InvalidQuantityException();
+        }
 
         Book bookToSave = bookMapper.toModel(bookRequestDTO);
         bookToSave.setPublisher(foundPublisher);
