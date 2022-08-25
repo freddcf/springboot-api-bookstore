@@ -7,6 +7,10 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import javax.validation.Valid;
 
 @Api("System users management")
 public interface UserControllerDocs {
@@ -30,20 +34,34 @@ public interface UserControllerDocs {
             @ApiResponse(code = 200, message = "Success user updated"),
             @ApiResponse(code = 400, message = "Missing required field, or an error on validation field rules")
     })
-    MessageDTO update(Long id, AuthenticatedUser authenticatedUser, UserDTO userToUpdateDTO);
+    MessageDTO update(Long id, UserDTO userToUpdateDTO);
 
     @ApiOperation(value = "Find user by id operation")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Success user found"),
             @ApiResponse(code = 404, message = "User not found error code")
     })
-    UserDTO findById(Long id);
+    UserResponseDTO findById(Long id);
 
     @ApiOperation(value = "List all registered users")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Return all registered users")
     })
-    Page<UserDTO> findAll(Pageable pageable);
+    Page<UserResponseDTO> findAll(Pageable pageable);
+
+    @ApiOperation(value = "Admin creation operation")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Success user creation"),
+            @ApiResponse(code = 400, message = "Missing required fields, wrong field range value or user already registered on system")
+    })
+    MessageDTO createAdmin(AdminDTO userToCreateDTO);
+
+    @ApiOperation(value = "Admin update operation")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success user updated"),
+            @ApiResponse(code = 400, message = "Missing required field, or an error on validation field rules")
+    })
+    MessageDTO updateAdmin(Long id, AdminDTO userToUpdateDTO);
 
     @ApiOperation(value = "User authentication operation")
     @ApiResponses(value = {
