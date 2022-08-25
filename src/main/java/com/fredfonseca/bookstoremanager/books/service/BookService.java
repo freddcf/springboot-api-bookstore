@@ -9,6 +9,7 @@ import com.fredfonseca.bookstoremanager.books.repository.BookRepository;
 import com.fredfonseca.bookstoremanager.publishers.entity.Publisher;
 import com.fredfonseca.bookstoremanager.publishers.service.PublisherService;
 import com.fredfonseca.bookstoremanager.rentals.repository.RentalRepository;
+import com.fredfonseca.bookstoremanager.utils.StringPattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,11 +29,15 @@ public class BookService {
 
     private RentalRepository rentalRepository;
 
+    private StringPattern stringPattern;
+
     @Autowired
-    public BookService(BookRepository bookRepository, PublisherService publisherService, RentalRepository rentalRepository) {
+    public BookService(BookRepository bookRepository, PublisherService publisherService,
+                       RentalRepository rentalRepository, StringPattern stringPattern) {
         this.bookRepository = bookRepository;
         this.publisherService = publisherService;
         this.rentalRepository = rentalRepository;
+        this.stringPattern = stringPattern;
     }
 
     public BookResponseDTO create(BookRequestDTO bookRequestDTO) {
@@ -45,6 +50,7 @@ public class BookService {
         }
 
         Book bookToSave = bookMapper.toModel(bookRequestDTO);
+        bookToSave.setName(stringPattern.textPattern(bookToSave.getName()));
         bookToSave.setPublisher(foundPublisher);
 
         Book savedBook = bookRepository.save(bookToSave);
