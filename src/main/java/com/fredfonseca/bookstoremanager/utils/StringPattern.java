@@ -1,15 +1,19 @@
 package com.fredfonseca.bookstoremanager.utils;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
 public class StringPattern {
 
     public String textPattern(String value) {
         String str = value.replaceAll("[ ]+", " ").trim();
         String filteredString = str
-                .replaceAll(",;", "")
-                .replaceAll(";,", "")
-                .replaceAll(".+", ".")
-                .replaceAll(";+", ";")
-                .replaceAll(",+", ",");
+                .replaceAll("[,;]", "")
+                .replaceAll("[;,]", "")
+                .replaceAll("[.]+", ".")
+                .replaceAll("[;]+", ";")
+                .replaceAll("[,]+", ",");
         String[] sentence = filteredString.split(" ");
         sentence[sentence.length-1] = sentence[sentence.length-1]
                 .replaceAll(",", "")
