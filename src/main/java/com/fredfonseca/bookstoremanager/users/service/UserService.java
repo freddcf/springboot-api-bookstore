@@ -1,9 +1,7 @@
 package com.fredfonseca.bookstoremanager.users.service;
 
 import com.fredfonseca.bookstoremanager.rentals.repository.RentalRepository;
-import com.fredfonseca.bookstoremanager.users.dto.AuthenticatedUser;
-import com.fredfonseca.bookstoremanager.users.dto.MessageDTO;
-import com.fredfonseca.bookstoremanager.users.dto.UserDTO;
+import com.fredfonseca.bookstoremanager.users.dto.*;
 import com.fredfonseca.bookstoremanager.users.entity.Users;
 import com.fredfonseca.bookstoremanager.users.enums.Role;
 import com.fredfonseca.bookstoremanager.users.exception.*;
@@ -44,6 +42,15 @@ public class UserService {
 
     public MessageDTO create(UserDTO userToCreateDTO) {
         verifyIfEmailExists(userToCreateDTO.getEmail());
+
+        Users userToCreate = userMapper.toModel(userToCreateDTO);
+
+        Users createdUser = userRepository.save(userToCreate);
+        return creationMessage(createdUser);
+    }
+
+    public MessageDTO createAdmin(AdminDTO userToCreateDTO) {
+        verifyIfEmailExists(userToCreateDTO.getEmail());
         verifyIfUsernameExists(userToCreateDTO.getUsername());
 
         Users userToCreate = userMapper.toModel(userToCreateDTO);
@@ -53,11 +60,20 @@ public class UserService {
         return creationMessage(createdUser);
     }
 
-    public MessageDTO update(Long id, AuthenticatedUser authenticatedUser, UserDTO userToUpdateDTO) {
-        Users foundAuthenticatedUser = verifyAndGetUserIfExists(authenticatedUser.getUsername());
+    public MessageDTO update(Long id, UserDTO userToUpdateDTO) {
         Users foundUser = verifyAndGetIfExists(id);
+        validateUserCredentialsChange(foundUser.getEmail(), userToUpdateDTO.getEmail());
 
-        checkChangeStatusPermission(userToUpdateDTO, foundAuthenticatedUser, foundUser);
+        Users userToUpdate = userMapper.toModel(userToUpdateDTO);
+        userToUpdate.setId(foundUser.getId());
+        Users updatedUser = userRepository.save(userToUpdate);
+        return updatedMessage(updatedUser);
+    }
+
+    public MessageDTO updateAdmin(Long id, AdminDTO userToUpdateDTO) {
+        Users foundUser = verifyAndGetIfExists(id);
+        validateAdminCredentialsChange(foundUser.getEmail(), foundUser.getUsername(),
+                userToUpdateDTO.getEmail(), userToUpdateDTO.getUsername());
 
         Users userToUpdate = userMapper.toModel(userToUpdateDTO);
         userToUpdate.setId(foundUser.getId());
@@ -70,8 +86,6 @@ public class UserService {
         Users foundAuthenticatedUser = verifyAndGetUserIfExists(authenticatedUser.getUsername());
         Users userToDelete = verifyAndGetIfExists(id);
 
-        checkDeleteStatusPermission(foundAuthenticatedUser, userToDelete);
-
         if (!rentalRepository.findByUsers(userToDelete).isEmpty()) {
             throw new DeleteDeniedException();
         }
@@ -81,12 +95,12 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    public UserDTO findById(Long id) {
+    public UserResponseDTO findById(Long id) {
         Users foundUser = verifyAndGetIfExists(id);
         return userMapper.toDTO(foundUser);
     }
 
-    public Page<UserDTO> findAll(Pageable pageable) {
+    public Page<UserResponseDTO> findAll(Pageable pageable) {
         return userRepository.findAll(pageable)
                 .map(userMapper::toDTO);
     }
@@ -96,47 +110,21 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException(id));
     }
 
-    private boolean isAdmin(Users foundAuthenticatedUser) {
-        return foundAuthenticatedUser.getRole().toString().equals(ROLE_ADMIN);
-    }
-
-    private void checkChangeStatusPermission(UserDTO userToUpdateDTO, Users authenticatedUser, Users foundUser) {
-        if (isAdmin(authenticatedUser)) {
-            validateCredentialsChange(foundUser.getEmail(), foundUser.getUsername(),
-                    userToUpdateDTO.getEmail(), userToUpdateDTO.getUsername(), true);
-            return;
-        }
-        if (!authenticatedUser.equals(foundUser)) {
-            throw new InvalidCredentialsChange(foundUser.getName());
-        }
-        if (!passwordEncoder.matches(userToUpdateDTO.getPassword(), foundUser.getPassword())) {
-            throw new UserCredentialsChangeNotAllowed();
-        }
-        validateCredentialsChange(foundUser.getEmail(), foundUser.getUsername(),
-                userToUpdateDTO.getEmail(), userToUpdateDTO.getUsername(), false);
-
-    }
-
-    private void checkDeleteStatusPermission(Users foundAuthenticatedUser, Users userToDelete) {
-        if (isAdmin(foundAuthenticatedUser)) {
-            return;
-        }
-        if (!foundAuthenticatedUser.equals(userToDelete)) {
-            throw new DeleteDeniedException(userToDelete.getName());
+    private void validateUserCredentialsChange(String currEmail, String newEmail) {
+        if (!currEmail.equals(newEmail)) {
+            verifyIfEmailExists(newEmail);
         }
     }
 
-    private void validateCredentialsChange(String currEmail, String currUsername, String newEmail, String newUsername, boolean isAdmin) {
+    private void validateAdminCredentialsChange(String currEmail, String currUsername, String newEmail, String newUsername) {
         if (!currEmail.equals(newEmail) && !currUsername.equals(newUsername)) {
             throw new InvalidCredentialsChange();
         }
         if (!currEmail.equals(newEmail)) {
             verifyIfEmailExists(newEmail);
         }
-        if (isAdmin) {
-            if (!currUsername.equals(newUsername)) {
-                verifyIfUsernameExists(newUsername);
-            }
+        if (!currUsername.equals(newUsername)) {
+            verifyIfUsernameExists(newUsername);
         }
     }
 

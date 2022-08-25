@@ -44,26 +44,37 @@ public class UserController implements UserControllerDocs{
     }
 
     @PutMapping("/{id}")
-    public MessageDTO update(@PathVariable Long id, @AuthenticationPrincipal AuthenticatedUser authenticatedUser, @RequestBody @Valid UserDTO userToUpdateDTO) {
-        return userService.update(id, authenticatedUser, userToUpdateDTO);
+    public MessageDTO update(@PathVariable Long id, @RequestBody @Valid UserDTO userToUpdateDTO) {
+        return userService.update(id, userToUpdateDTO);
     }
 
     @GetMapping("/{id}")
-    public UserDTO findById(@PathVariable Long id) {
+    public UserResponseDTO findById(@PathVariable Long id) {
         return userService.findById(id);
     }
 
     @GetMapping
-    public Page<UserDTO> findAll(Pageable pageable) {
+    public Page<UserResponseDTO> findAll(Pageable pageable) {
         return userService.findAll(pageable);
     }
 
-    @PostMapping(value = "/authenticate")
+    @PostMapping(value = "/admin")
+    @ResponseStatus(HttpStatus.CREATED)
+    public MessageDTO createAdmin(@RequestBody @Valid AdminDTO userToCreateDTO) {
+        return userService.createAdmin(userToCreateDTO);
+    }
+
+    @PutMapping("admin/{id}")
+    public MessageDTO updateAdmin(@PathVariable Long id, @RequestBody @Valid AdminDTO userToUpdateDTO) {
+        return userService.updateAdmin(id, userToUpdateDTO);
+    }
+
+    @PostMapping("/authenticate")
     public JwtResponse createAuthenticationToken(@RequestBody @Valid JwtRequest jwtRequest) {
         return authenticationService.createAuthenticationToken(jwtRequest);
     }
 
-    @PostMapping(value = "/recover")
+    @PostMapping("/recover")
     public MessageDTO recoverUserData(@RequestBody @Valid RecoverUserInfo recoverUserInfo) {
         return recoverUserDataService.recoverUserData(recoverUserInfo);
     }

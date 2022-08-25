@@ -1,13 +1,16 @@
-package com.fredfonseca.bookstoremanager.users.entity;
+package com.fredfonseca.bookstoremanager.users.dto;
 
 import com.fredfonseca.bookstoremanager.users.enums.Role;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Data
-@Entity
-public class Users {
+@AllArgsConstructor
+@NoArgsConstructor
+public class UserResponseDTO {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,4 +38,3 @@ public class Users {
     @Column(nullable = false, length = 20)
     private Role role;
 }
-
