@@ -175,7 +175,7 @@ public class RentalService {
 
     private void validateData(RentalRequestDTO rentalRequestDTO, Rental rentToSave, Book book) {
         LocalDate today = LocalDate.now();
-        if (rentalRequestDTO.getRentalDate().isAfter(today)) {
+        if (rentalRequestDTO.getRentalDate().isBefore(today)) {
             throw new InvalidFutureDateException();
         }
 
