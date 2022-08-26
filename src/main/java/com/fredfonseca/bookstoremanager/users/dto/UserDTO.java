@@ -36,8 +36,4 @@ public class UserDTO {
     @NotNull
     @NotEmpty
     private String address;
-
-    @Enumerated(EnumType.STRING)
-    @NotNull
-    private Role role = Role.valueOf("USER");
 }
