@@ -45,6 +45,14 @@ public class BookstoreExceptionHandler extends ResponseEntityExceptionHandler {
                 Collections.singletonList(exception.getMessage()));
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Object> handleIllegalArgumentException(IllegalArgumentException exception) {
+        return buildResponseEntity(
+                HttpStatus.BAD_REQUEST,
+                exception.getMessage(),
+                Collections.singletonList(exception.getMessage()));
+    }
+
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
