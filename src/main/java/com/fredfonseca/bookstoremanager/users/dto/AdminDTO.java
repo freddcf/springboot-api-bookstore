@@ -44,8 +44,4 @@ public class AdminDTO {
     @NotNull
     @NotEmpty
     private String password;
-
-    @Enumerated(EnumType.STRING)
-    @NotNull
-    private Role role = Role.valueOf("ADMIN");
 }

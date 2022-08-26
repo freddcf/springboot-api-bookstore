@@ -30,6 +30,7 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
 
     private final String ROLE_ADMIN = Role.ADMIN.getDescription();
+    private final String ROLE_USER = Role.USER.getDescription();
 
     @Autowired
     public UserService(UserRepository userRepository,
@@ -44,6 +45,7 @@ public class UserService {
         verifyIfEmailExists(userToCreateDTO.getEmail());
 
         Users userToCreate = userMapper.toModel(userToCreateDTO);
+        userToCreate.setRole(Role.valueOf(ROLE_USER));
 
         Users createdUser = userRepository.save(userToCreate);
         return creationMessage(createdUser);
@@ -54,6 +56,7 @@ public class UserService {
         verifyIfUsernameExists(userToCreateDTO.getUsername());
 
         Users userToCreate = userMapper.toModel(userToCreateDTO);
+        userToCreate.setRole(Role.valueOf(ROLE_ADMIN));
         userToCreate.setPassword(passwordEncoder.encode(userToCreate.getPassword()));
 
         Users createdUser = userRepository.save(userToCreate);
@@ -62,21 +65,29 @@ public class UserService {
 
     public MessageDTO update(Long id, UserDTO userToUpdateDTO) {
         Users foundUser = verifyAndGetIfExists(id);
+        if(!foundUser.getRole().equals(Role.valueOf(ROLE_ADMIN))) {
+            throw new InvalidCredentialsChange(ROLE_USER);
+        }
         validateUserCredentialsChange(foundUser.getEmail(), userToUpdateDTO.getEmail());
 
         Users userToUpdate = userMapper.toModel(userToUpdateDTO);
         userToUpdate.setId(foundUser.getId());
+        userToUpdate.setRole(Role.valueOf(ROLE_USER));
         Users updatedUser = userRepository.save(userToUpdate);
         return updatedMessage(updatedUser);
     }
 
     public MessageDTO updateAdmin(Long id, AdminDTO userToUpdateDTO) {
         Users foundUser = verifyAndGetIfExists(id);
+        if(!foundUser.getRole().equals(Role.valueOf(ROLE_ADMIN))) {
+            throw new InvalidCredentialsChange(ROLE_ADMIN);
+        }
         validateAdminCredentialsChange(foundUser.getEmail(), foundUser.getUsername(),
                 userToUpdateDTO.getEmail(), userToUpdateDTO.getUsername());
 
         Users userToUpdate = userMapper.toModel(userToUpdateDTO);
         userToUpdate.setId(foundUser.getId());
+        userToUpdate.setRole(Role.valueOf(ROLE_ADMIN));
         userToUpdate.setPassword(passwordEncoder.encode(userToUpdate.getPassword()));
         Users updatedUser = userRepository.save(userToUpdate);
         return updatedMessage(updatedUser);

@@ -15,8 +15,10 @@ This is a Spring Boot RestAPI project using PostgreSQL as database.
 - Learn to validate data on backend using DTOs
 - Manage dependencies with Maven
 - Create a backend RestAPI based application to integrate with a Bookstore frontend app
-- Treat backend exceptions according with the rules of Http Status
+- Treat backend exceptions according to the rules of Http Status
 - Relate tables for database environment
+- Implement Spring Security with JWT
+- Manipulate users authentication
 
 ## ⚡ Version:
 ```

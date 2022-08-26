@@ -5,7 +5,7 @@ public class InvalidCredentialsChange extends IllegalArgumentException {
         super("You may only change one of your unique credentials at time!");
     }
 
-    public InvalidCredentialsChange(String userName) {
-        super(String.format("You are not allowed to change the credentials of %s", userName));
+    public InvalidCredentialsChange(String type) {
+        super(String.format("Error! The informed ID is not from a %s!", type));
     }
 }
