@@ -1,8 +1,6 @@
 package com.fredfonseca.bookstoremanager.users.exception;
 
-import javax.persistence.EntityExistsException;
-
-public class InvalidCredentialsChange extends EntityExistsException {
+public class InvalidCredentialsChange extends IllegalArgumentException {
     public InvalidCredentialsChange() {
         super("You may only change one of your unique credentials at time!");
     }

@@ -1,8 +1,6 @@
 package com.fredfonseca.bookstoremanager.users.exception;
 
-import javax.persistence.EntityExistsException;
-
-public class UserCredentialsChangeNotAllowed extends EntityExistsException {
+public class UserCredentialsChangeNotAllowed extends IllegalArgumentException {
     public UserCredentialsChangeNotAllowed() {
         super("Incorrect Password");
     }
