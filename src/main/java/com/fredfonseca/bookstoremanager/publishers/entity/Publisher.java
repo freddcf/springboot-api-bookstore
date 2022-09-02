@@ -12,9 +12,9 @@ public class Publisher {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 45)
     private String name;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = 30)
     private String city;
 }
