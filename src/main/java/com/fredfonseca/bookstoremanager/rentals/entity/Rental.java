@@ -21,7 +21,7 @@ public class Rental {
     @Column(nullable = false)
     private LocalDate returnForecast;
 
-    @Column
+    @Column(length = 30)
     private String returnDate;
 
     @ManyToOne(cascade = {CascadeType.MERGE})

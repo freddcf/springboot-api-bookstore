@@ -14,7 +14,7 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true, length = 100)
+    @Column(nullable = false, unique = true, length = 45)
     private String name;
 
     @Column(columnDefinition = "integer default 0")
@@ -26,7 +26,7 @@ public class Book {
     @Column(nullable = false)
     private LocalDate launchDate;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 45)
     private String author;
 
     @ManyToOne(cascade = {CascadeType.MERGE})
