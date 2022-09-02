@@ -4,7 +4,6 @@ import com.fredfonseca.bookstoremanager.users.enums.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -72,14 +71,8 @@ public class WebSecurityConfig{
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf().disable()
-                .authorizeHttpRequests().antMatchers(SWAGGER_URL).permitAll()
-                .antMatchers(HttpMethod.POST, USERS_API_URL).permitAll()
-                .antMatchers(HttpMethod.POST, USERS_ADMIN_API_URL).permitAll()
-                .antMatchers(HttpMethod.GET, USERS_API_URL).permitAll()
-                .antMatchers(HttpMethod.GET, PUBLISHERS_API_URL).permitAll()
-                .antMatchers(HttpMethod.GET, BOOKS_API_URL).permitAll()
-                .antMatchers(PUBLISHERS_API_URL, BOOKS_API_URL, USERS_ADMIN_API_URL).hasAnyRole(ROLE_ADMIN)
-                .antMatchers(USERS_API_URL, RENTALS_API_URL).hasAnyRole(ROLE_ADMIN, ROLE_USER)
+                .authorizeHttpRequests().antMatchers(SWAGGER_URL, USERS_API_URL, USERS_ADMIN_API_URL, PUBLISHERS_API_URL, BOOKS_API_URL).permitAll()
+                .antMatchers(RENTALS_API_URL).hasAnyRole(ROLE_ADMIN)
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)

@@ -1,7 +1,10 @@
 package com.fredfonseca.bookstoremanager.users.service;
 
 import com.fredfonseca.bookstoremanager.rentals.repository.RentalRepository;
-import com.fredfonseca.bookstoremanager.users.dto.*;
+import com.fredfonseca.bookstoremanager.users.dto.AdminDTO;
+import com.fredfonseca.bookstoremanager.users.dto.MessageDTO;
+import com.fredfonseca.bookstoremanager.users.dto.UserDTO;
+import com.fredfonseca.bookstoremanager.users.dto.UserResponseDTO;
 import com.fredfonseca.bookstoremanager.users.entity.Users;
 import com.fredfonseca.bookstoremanager.users.enums.Role;
 import com.fredfonseca.bookstoremanager.users.exception.*;
@@ -65,7 +68,7 @@ public class UserService {
 
     public MessageDTO update(Long id, UserDTO userToUpdateDTO) {
         Users foundUser = verifyAndGetIfExists(id);
-        if(!foundUser.getRole().equals(Role.valueOf(ROLE_ADMIN))) {
+        if(!foundUser.getRole().equals(Role.valueOf(ROLE_USER))) {
             throw new InvalidCredentialsChange(ROLE_USER);
         }
         validateUserCredentialsChange(foundUser.getEmail(), userToUpdateDTO.getEmail());
@@ -93,15 +96,11 @@ public class UserService {
         return updatedMessage(updatedUser);
     }
 
-    public void delete(Long id, AuthenticatedUser authenticatedUser) {
-        Users foundAuthenticatedUser = verifyAndGetUserIfExists(authenticatedUser.getUsername());
+    public void delete(Long id) {
         Users userToDelete = verifyAndGetIfExists(id);
 
         if (!rentalRepository.findByUsers(userToDelete).isEmpty()) {
             throw new DeleteDeniedException();
-        }
-        if (userToDelete.equals(foundAuthenticatedUser)) {
-            throw new DeleteDeniedException(foundAuthenticatedUser.getName(), foundAuthenticatedUser.getRole().getDescription());
         }
         userRepository.deleteById(id);
     }

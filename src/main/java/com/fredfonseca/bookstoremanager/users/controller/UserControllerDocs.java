@@ -23,7 +23,7 @@ public interface UserControllerDocs {
             @ApiResponse(code = 204, message = "Success user exclusion"),
             @ApiResponse(code = 404, message = "User with id not found in the System")
     })
-    void delete(Long id, AuthenticatedUser authenticatedUser);
+    void delete(Long id);
 
     @ApiOperation(value = "User update operation")
     @ApiResponses(value = {
