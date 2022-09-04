@@ -56,9 +56,11 @@ public class UserService {
 
     public MessageDTO createAdmin(AdminDTO userToCreateDTO) {
         verifyIfEmailExists(userToCreateDTO.getEmail());
-        verifyIfUsernameExists(userToCreateDTO.getUsername());
+        String formatedUsername = userToCreateDTO.getUsername().replaceAll(" ", "").toLowerCase();
+        verifyIfUsernameExists(formatedUsername);
 
         Users userToCreate = userMapper.toModel(userToCreateDTO);
+        userToCreate.setUsername(formatedUsername);
         userToCreate.setRole(Role.valueOf(ROLE_ADMIN));
         userToCreate.setPassword(passwordEncoder.encode(userToCreate.getPassword()));
 
@@ -81,6 +83,7 @@ public class UserService {
     }
 
     public MessageDTO updateAdmin(Long id, AdminDTO userToUpdateDTO) {
+        userToUpdateDTO.setUsername(userToUpdateDTO.getUsername().replaceAll(" ", "").toLowerCase());
         Users foundUser = verifyAndGetIfExists(id);
         if(!foundUser.getRole().equals(Role.valueOf(ROLE_ADMIN))) {
             throw new InvalidCredentialsChange(ROLE_ADMIN);
