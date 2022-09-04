@@ -45,7 +45,7 @@ public class BookService {
         Publisher foundPublisher = publisherService.verifyAndGetIfExists(bookRequestDTO.getPublisherId());
         validateDate(bookRequestDTO);
 
-        if(bookRequestDTO.getQuantity() < 0) {
+        if(bookRequestDTO.getQuantity() < 1) {
             throw new InvalidQuantityException();
         }
 
