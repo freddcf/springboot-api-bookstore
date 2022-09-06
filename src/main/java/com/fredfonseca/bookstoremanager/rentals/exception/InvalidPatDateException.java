@@ -2,6 +2,6 @@ package com.fredfonseca.bookstoremanager.rentals.exception;
 
 public class InvalidPatDateException extends IllegalArgumentException {
     public InvalidPatDateException() {
-        super("You may not rent a book in a past date!");
+        super("Você não pode alugar um livro para uma data passada");
     }
 }
