@@ -4,6 +4,6 @@ import javax.persistence.EntityExistsException;
 
 public class UserEmailAlreadyExistsException extends EntityExistsException {
     public UserEmailAlreadyExistsException(String email) {
-        super(String.format("User with email %s already exists!", email));
+        super(String.format("Usuário com email %s já existe", email));
     }
 }

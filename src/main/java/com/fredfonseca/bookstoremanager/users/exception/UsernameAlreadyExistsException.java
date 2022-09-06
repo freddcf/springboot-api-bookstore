@@ -4,6 +4,6 @@ import javax.persistence.EntityExistsException;
 
 public class UsernameAlreadyExistsException extends EntityExistsException {
     public UsernameAlreadyExistsException(String username) {
-        super(String.format("User with username %s already exists!", username));
+        super(String.format("Usuário com username %s já existe", username));
     }
 }

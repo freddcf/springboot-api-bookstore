@@ -2,6 +2,6 @@ package com.fredfonseca.bookstoremanager.books.exception;
 
 public class DeleteDeniedException extends IllegalArgumentException {
     public DeleteDeniedException() {
-        super("Delete command denied! This book object is linked to a Rental!");
+        super("Deleção negada! Este livro foi utilizado em um ou mais aluguéis");
     }
 }

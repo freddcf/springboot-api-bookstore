@@ -2,6 +2,6 @@ package com.fredfonseca.bookstoremanager.publishers.exception;
 
 public class DeleteDeniedException extends IllegalArgumentException {
     public DeleteDeniedException() {
-        super("Delete command denied! This publisher object is linked to a book!");
+        super("Deleção negada! Esta editora possui um ou mais livros cadastrados");
     }
 }

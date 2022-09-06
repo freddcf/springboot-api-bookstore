@@ -92,10 +92,8 @@ public class RentalService {
     }
 
     public void delete(Long id, AuthenticatedUser authenticatedUser) {
-        Users foundAuthenticatedUser = userService.verifyAndGetUserIfExists(authenticatedUser.getUsername());
+        userService.verifyAndGetUserIfExists(authenticatedUser.getUsername());
         Rental rentalToDelete = verifyIfExists(id);
-
-        checkChangeStatusPermission(rentalToDelete.getUsers().getUsername(), foundAuthenticatedUser);
 
         if(rentalToDelete.getReturnDate().equals(RENTAL_DEFAULT)) {
             returnBookToStock(rentalToDelete.getBook());
@@ -105,10 +103,8 @@ public class RentalService {
     }
 
     public RentalResponseDTO update(Long id, AuthenticatedUser authenticatedUser, RentalRequestUpdateDTO rentalRequestUpdateDTO) {
-        Users foundAuthenticatedUser = userService.verifyAndGetUserIfExists(authenticatedUser.getUsername());
+        userService.verifyAndGetUserIfExists(authenticatedUser.getUsername());
         Rental foundRental = verifyIfExists(id);
-
-        checkChangeStatusPermission(foundRental.getUsers().getUsername(), foundAuthenticatedUser);
 
         if(!foundRental.getReturnDate().equals(RENTAL_DEFAULT)){
             throw new BookAlreadyReturnedException(foundRental.getUsers().getName(), foundRental.getBook().getName());
@@ -124,15 +120,6 @@ public class RentalService {
 
     private boolean isAdmin(Users user) {
         return user.getRole().toString().equals(ROLE_ADMIN);
-    }
-
-    private void checkChangeStatusPermission(String foundUsername, Users authenticatedUser) {
-        if (isAdmin(authenticatedUser)) {
-            return;
-        }
-        if (!foundUsername.equals(authenticatedUser.getUsername())) {
-            throw new RentalChangeNotAllowedException();
-        }
     }
 
     private String validateReturnDate(RentalRequestUpdateDTO rentalRequestUpdateDTO, Rental foundRental) {
