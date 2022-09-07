@@ -28,20 +28,14 @@ public class RecoverUserDataService {
         Users foundUser = userRepository.findByUsernameAndEmail(recoverUserInfo.getUsername(), recoverUserInfo.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException(String.format("User not found!")));
 
-        String newPassword = generateNewPassword();
+        String newPassword = recoverUserInfo.getPassword();
         foundUser.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(foundUser);
 
-        String message = String.format("Your new Password is set to %s", newPassword);
+        String message = String.format("Sua nova senha é %s", newPassword);
         return MessageDTO
                 .builder()
                 .message(message)
                 .build();
-    }
-
-    private String generateNewPassword() {
-        return UUID.randomUUID().toString()
-                .toUpperCase().replaceAll("-", "")
-                .substring(0, 12);
     }
 }
