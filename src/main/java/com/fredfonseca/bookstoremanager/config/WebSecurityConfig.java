@@ -70,7 +70,8 @@ public class WebSecurityConfig{
     }
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.csrf().disable()
+        httpSecurity.cors().and()
+                .csrf().disable()
                 .authorizeHttpRequests().antMatchers(SWAGGER_URL, USERS_API_URL, USERS_ADMIN_API_URL, PUBLISHERS_API_URL, BOOKS_API_URL).permitAll()
                 .antMatchers(RENTALS_API_URL).hasAnyRole(ROLE_ADMIN)
                 .anyRequest().authenticated()
@@ -90,6 +91,4 @@ public class WebSecurityConfig{
     public WebSecurityCustomizer webSecurityCustomizer() throws Exception {
         return (web) -> web.ignoring().antMatchers(SWAGGER_RESOURCES);
     }
-
-
 }
