@@ -84,6 +84,7 @@ public class BookService {
         Book bookToUpdate = bookMapper.toModel(bookRequestDTO);
         bookToUpdate.setId(id);
         bookToUpdate.setPublisher(foundPublisher);
+        bookToUpdate.setRentedQuantity(foundBook.getRentedQuantity());
         bookToUpdate.setLaunchDate(foundBook.getLaunchDate());
         Book updatedBook = bookRepository.save(bookToUpdate);
         return bookMapper.toDTO(updatedBook);
