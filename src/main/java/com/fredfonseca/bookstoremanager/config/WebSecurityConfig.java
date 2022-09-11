@@ -44,19 +44,16 @@ public class WebSecurityConfig{
     private UserDetailsService userDetailsService;
     private PasswordEncoder passwordEncoder;
     private JwtRequestFilter jwtRequestFilter;
-    private JwtAuthenticationLvlDenied jwtAuthenticationLvlDenied;
 
     @Autowired
     public WebSecurityConfig(JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint,
                              UserDetailsService userDetailsService,
                              PasswordEncoder passwordEncoder,
-                             JwtRequestFilter jwtRequestFilter,
-                             JwtAuthenticationLvlDenied jwtAuthenticationLvlDenied) {
+                             JwtRequestFilter jwtRequestFilter) {
         this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
         this.userDetailsService = userDetailsService;
         this.passwordEncoder = passwordEncoder;
         this.jwtRequestFilter = jwtRequestFilter;
-        this.jwtAuthenticationLvlDenied = jwtAuthenticationLvlDenied;
     }
 
     @Autowired
@@ -77,7 +74,6 @@ public class WebSecurityConfig{
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
-                .and().exceptionHandling().accessDeniedHandler(jwtAuthenticationLvlDenied)
                 .and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
