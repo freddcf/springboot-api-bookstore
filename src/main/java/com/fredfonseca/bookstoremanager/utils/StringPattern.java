@@ -18,6 +18,22 @@ public class StringPattern {
         return join(sentence);
     }
 
+    public String basicPattern(String str) {
+        return str.replaceAll("[ ]+", " ")
+                .replaceAll("[^a-zA-Z0-9'`,. ]+", "")
+                .replaceAll("[']+", "'")
+                .replaceAll("[`]+", "`")
+                .replaceAll("[,]+", ",")
+                .replaceAll("[.]+", ".").trim();
+    }
+
+    public String onlyWordsPattern(String str) {
+        return str.replaceAll("[ ]+", " ")
+                .replaceAll("[^a-zA-Z'` ]+", "")
+                .replaceAll("[']+", "'")
+                .replaceAll("[`]+", "`").trim();
+    }
+
     private String join(String[] sentence) {
         String str = "";
         for(int i = 0 ; i < sentence.length ; i++) {

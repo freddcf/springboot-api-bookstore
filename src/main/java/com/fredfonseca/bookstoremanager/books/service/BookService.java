@@ -51,6 +51,7 @@ public class BookService {
 
         Book bookToSave = bookMapper.toModel(bookRequestDTO);
         bookToSave.setName(stringPattern.textPattern(bookToSave.getName()));
+        bookToSave.setAuthor(stringPattern.onlyWordsPattern(bookToSave.getAuthor()));
         bookToSave.setPublisher(foundPublisher);
 
         Book savedBook = bookRepository.save(bookToSave);
@@ -86,6 +87,8 @@ public class BookService {
         bookToUpdate.setPublisher(foundPublisher);
         bookToUpdate.setRentedQuantity(foundBook.getRentedQuantity());
         bookToUpdate.setLaunchDate(foundBook.getLaunchDate());
+        bookToUpdate.setName(stringPattern.textPattern(bookToUpdate.getName()));
+        bookToUpdate.setAuthor(stringPattern.onlyWordsPattern(bookToUpdate.getAuthor()));
         Book updatedBook = bookRepository.save(bookToUpdate);
         return bookMapper.toDTO(updatedBook);
     }

@@ -10,6 +10,7 @@ import com.fredfonseca.bookstoremanager.users.enums.Role;
 import com.fredfonseca.bookstoremanager.users.exception.*;
 import com.fredfonseca.bookstoremanager.users.mapper.UserMapper;
 import com.fredfonseca.bookstoremanager.users.repository.UserRepository;
+import com.fredfonseca.bookstoremanager.utils.StringPattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -32,16 +33,20 @@ public class UserService {
 
     private PasswordEncoder passwordEncoder;
 
+    private StringPattern stringPattern;
+
     private final String ROLE_ADMIN = Role.ADMIN.getDescription();
     private final String ROLE_USER = Role.USER.getDescription();
 
     @Autowired
     public UserService(UserRepository userRepository,
                        RentalRepository rentalRepository,
-                       PasswordEncoder passwordEncoder) {
+                       PasswordEncoder passwordEncoder,
+                       StringPattern stringPattern) {
         this.userRepository = userRepository;
         this.rentalRepository = rentalRepository;
         this.passwordEncoder = passwordEncoder;
+        this.stringPattern = stringPattern;
     }
 
     public MessageDTO create(UserDTO userToCreateDTO) {
@@ -49,6 +54,9 @@ public class UserService {
 
         Users userToCreate = userMapper.toModel(userToCreateDTO);
         userToCreate.setRole(Role.valueOf(ROLE_USER));
+        userToCreate.setName(stringPattern.onlyWordsPattern(userToCreate.getName()));
+        userToCreate.setCity(stringPattern.onlyWordsPattern(userToCreate.getCity()));
+        userToCreate.setAddress(stringPattern.basicPattern(userToCreate.getAddress()));
 
         Users createdUser = userRepository.save(userToCreate);
         return creationMessage(createdUser);
@@ -63,6 +71,9 @@ public class UserService {
         userToCreate.setUsername(formatedUsername);
         userToCreate.setRole(Role.valueOf(ROLE_ADMIN));
         userToCreate.setPassword(passwordEncoder.encode(userToCreate.getPassword()));
+        userToCreate.setName(stringPattern.onlyWordsPattern(userToCreate.getName()));
+        userToCreate.setCity(stringPattern.onlyWordsPattern(userToCreate.getCity()));
+        userToCreate.setAddress(stringPattern.basicPattern(userToCreate.getAddress()));
 
         Users createdUser = userRepository.save(userToCreate);
         return creationMessage(createdUser);
@@ -78,6 +89,10 @@ public class UserService {
         Users userToUpdate = userMapper.toModel(userToUpdateDTO);
         userToUpdate.setId(foundUser.getId());
         userToUpdate.setRole(Role.valueOf(ROLE_USER));
+        userToUpdate.setName(stringPattern.onlyWordsPattern(userToUpdate.getName()));
+        userToUpdate.setCity(stringPattern.onlyWordsPattern(userToUpdate.getCity()));
+        userToUpdate.setAddress(stringPattern.basicPattern(userToUpdate.getAddress()));
+
         Users updatedUser = userRepository.save(userToUpdate);
         return updatedMessage(updatedUser);
     }
@@ -95,6 +110,10 @@ public class UserService {
         userToUpdate.setId(foundUser.getId());
         userToUpdate.setRole(Role.valueOf(ROLE_ADMIN));
         userToUpdate.setPassword(passwordEncoder.encode(userToUpdate.getPassword()));
+        userToUpdate.setName(stringPattern.onlyWordsPattern(userToUpdate.getName()));
+        userToUpdate.setCity(stringPattern.onlyWordsPattern(userToUpdate.getCity()));
+        userToUpdate.setAddress(stringPattern.basicPattern(userToUpdate.getAddress()));
+
         Users updatedUser = userRepository.save(userToUpdate);
         return updatedMessage(updatedUser);
     }

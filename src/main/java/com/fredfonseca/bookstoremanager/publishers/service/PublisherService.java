@@ -9,6 +9,7 @@ import com.fredfonseca.bookstoremanager.publishers.exception.PublisherAlreadyExi
 import com.fredfonseca.bookstoremanager.publishers.exception.PublisherNotFoundException;
 import com.fredfonseca.bookstoremanager.publishers.mapper.PublisherMapper;
 import com.fredfonseca.bookstoremanager.publishers.repository.PublisherRepository;
+import com.fredfonseca.bookstoremanager.utils.StringPattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,16 +26,21 @@ public class PublisherService {
 
     private BookRepository bookRepository;
 
+    private StringPattern stringPattern;
+
     @Autowired
-    public PublisherService(PublisherRepository publisherRepository, BookRepository bookRepository) {
+    public PublisherService(PublisherRepository publisherRepository, BookRepository bookRepository, StringPattern stringPattern) {
         this.publisherRepository = publisherRepository;
         this.bookRepository = bookRepository;
+        this.stringPattern = stringPattern;
     }
 
     public PublisherResponseDTO create(PublisherRequestDTO publisherRequestDTO) {
         verifyIfExists(publisherRequestDTO.getName());
 
         Publisher publisherToCreate = publisherMapper.toModel(publisherRequestDTO);
+        publisherToCreate.setName(stringPattern.basicPattern(publisherToCreate.getName()));
+        publisherToCreate.setCity(stringPattern.onlyWordsPattern(publisherToCreate.getCity()));
         Publisher createdPublisher = publisherRepository.save(publisherToCreate);
         return publisherMapper.toDTO(createdPublisher);
     }
@@ -61,10 +67,11 @@ public class PublisherService {
     public PublisherResponseDTO update(Long id, PublisherRequestDTO publisherToUpdateDTO) {
         Publisher foundPublisher = verifyAndGetIfExists(id);
         publisherToUpdateDTO.setId(foundPublisher.getId());
-
         verifyIfExists(publisherToUpdateDTO.getId(), publisherToUpdateDTO.getName());
 
         Publisher publisherToUpdate = publisherMapper.toModel(publisherToUpdateDTO);
+        publisherToUpdate.setName(stringPattern.basicPattern(publisherToUpdate.getName()));
+        publisherToUpdate.setCity(stringPattern.onlyWordsPattern(publisherToUpdate.getCity()));
         Publisher updatedPublisher = publisherRepository.save(publisherToUpdate);
         return publisherMapper.toDTO(updatedPublisher);
     }
