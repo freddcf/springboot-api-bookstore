@@ -7,6 +7,8 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @Api("System users management")
 public interface UserControllerDocs {
@@ -58,6 +60,13 @@ public interface UserControllerDocs {
             @ApiResponse(code = 400, message = "Missing required field, or an error on validation field rules")
     })
     MessageDTO updateAdmin(Long id, AdminDTO userToUpdateDTO);
+
+    @ApiOperation(value = "Admin delete operation")
+    @ApiResponses(value = {
+            @ApiResponse(code = 204, message = "Success admin exclusion"),
+            @ApiResponse(code = 404, message = "Admin with id not found in the System")
+    })
+    void deleteAdmin(Long id, AuthenticatedUser authenticatedUser);
 
     @ApiOperation(value = "User authentication operation")
     @ApiResponses(value = {
