@@ -8,7 +8,6 @@ import com.fredfonseca.bookstoremanager.users.exception.*;
 import com.fredfonseca.bookstoremanager.users.mapper.UserMapper;
 import com.fredfonseca.bookstoremanager.users.repository.UserRepository;
 import com.fredfonseca.bookstoremanager.utils.StringPattern;
-import net.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -133,7 +132,7 @@ public class UserService {
 
     public void deleteAdmin(Long id, AuthenticatedUser authenticatedUser) {
         Users userToDelete = verifyAndGetIfExists(id);
-        Users foundAuthenticatedUser = verifyAndGetUserIfExists(authenticatedUser.getUsername());
+        verifyAndGetUserIfExists(authenticatedUser.getUsername());
 
         if(userToDelete.getRole().getDescription().equals(ROLE_USER)) {
             throw new InvalidCredentialsChange(ROLE_ADMIN);
