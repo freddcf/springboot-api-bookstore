@@ -103,6 +103,9 @@ public class UserService {
         if(!foundUser.getRole().equals(Role.valueOf(ROLE_ADMIN))) {
             throw new InvalidCredentialsChange(ROLE_ADMIN);
         }
+        if(foundUser.getUsername().equals("admin")){
+            userToUpdateDTO.setUsername("admin");
+        }
         validateAdminCredentialsChange(foundUser.getEmail(), foundUser.getUsername(),
                 userToUpdateDTO.getEmail(), userToUpdateDTO.getUsername());
 
@@ -121,6 +124,9 @@ public class UserService {
     public void delete(Long id) {
         Users userToDelete = verifyAndGetIfExists(id);
 
+        if(userToDelete.getUsername().equals("admin")) {
+            throw new DeleteDeniedException(userToDelete.getUsername());
+        }
         if (!rentalRepository.findByUsers(userToDelete).isEmpty()) {
             throw new DeleteDeniedException();
         }
@@ -133,8 +139,23 @@ public class UserService {
     }
 
     public Page<UserResponseDTO> findAll(Pageable pageable) {
-        return userRepository.findAll(pageable)
-                .map(userMapper::toDTO);
+        Page<UserResponseDTO> usersList = userRepository.findAll(pageable).map(userMapper::toDTO);
+        if(usersList.isEmpty()) {
+            generateDefaultAdmin();
+        }
+        return usersList;
+    }
+
+    private void generateDefaultAdmin() {
+        AdminDTO admin = AdminDTO.builder()
+                .name("admin")
+                .email("admin@gmail.com")
+                .city("None")
+                .address("None")
+                .username("admin")
+                .password("admin")
+                .build();
+        createAdmin(admin);
     }
 
     public Users verifyAndGetIfExists(Long id) {

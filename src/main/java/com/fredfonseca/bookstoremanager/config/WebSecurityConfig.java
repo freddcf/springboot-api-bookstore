@@ -69,8 +69,8 @@ public class WebSecurityConfig{
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.cors().and()
                 .csrf().disable()
-                .authorizeHttpRequests().antMatchers(SWAGGER_URL, USERS_API_URL, USERS_ADMIN_API_URL, PUBLISHERS_API_URL, BOOKS_API_URL).permitAll()
-                .antMatchers(RENTALS_API_URL).hasAnyRole(ROLE_ADMIN)
+                .authorizeHttpRequests().antMatchers(USERS_ADMIN_API_URL, RENTALS_API_URL).hasAnyRole(ROLE_ADMIN)
+                .antMatchers(SWAGGER_URL, USERS_API_URL, PUBLISHERS_API_URL, BOOKS_API_URL).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)

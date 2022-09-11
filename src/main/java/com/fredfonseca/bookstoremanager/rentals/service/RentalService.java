@@ -10,7 +10,6 @@ import com.fredfonseca.bookstoremanager.rentals.enums.RentalReturnStates;
 import com.fredfonseca.bookstoremanager.rentals.exception.*;
 import com.fredfonseca.bookstoremanager.rentals.mapper.RentalMapper;
 import com.fredfonseca.bookstoremanager.rentals.repository.RentalRepository;
-import com.fredfonseca.bookstoremanager.users.dto.AuthenticatedUser;
 import com.fredfonseca.bookstoremanager.users.entity.Users;
 import com.fredfonseca.bookstoremanager.users.enums.Role;
 import com.fredfonseca.bookstoremanager.users.service.UserService;
@@ -45,13 +44,9 @@ public class RentalService {
         this.userService = userService;
     }
 
-    public RentalResponseDTO create(AuthenticatedUser authenticatedUser, RentalRequestDTO rentalRequestDTO) {
+    public RentalResponseDTO create(RentalRequestDTO rentalRequestDTO) {
         Book foundBook = bookService.verifyAndGetIfExists(rentalRequestDTO.getBookId());
-        Users foundAuthenticatedUser = userService.verifyAndGetUserIfExists(authenticatedUser.getUsername());
         Users foundUser = userService.verifyAndGetIfExists(rentalRequestDTO.getUserId());
-        if(!isAdmin(foundAuthenticatedUser)) {
-            foundUser = foundAuthenticatedUser;
-        }
         String rentStatus = RENTAL_DEFAULT;
 
         Rental rentToSave = rentalMapper.toModel(rentalRequestDTO);
@@ -61,49 +56,33 @@ public class RentalService {
         verifyIfExists(rentToSave.getBook(), rentToSave.getUsers());
 
         Book alterBook = rentToSave.getBook();
-
         validateData(rentalRequestDTO, rentToSave, alterBook);
-        alterBook.setQuantity(alterBook.getQuantity() - 1);
-        alterBook.setRentedQuantity(alterBook.getRentedQuantity() + 1);
+        manageBookStock(alterBook, false);
 
         Rental savedRent = rentalRepository.save(rentToSave);
         return rentalMapper.toDTO(savedRent);
     }
 
-    public RentalResponseDTO findById(Long id, AuthenticatedUser authenticatedUser) {
-        Users foundAuthenticatedUser = userService.verifyAndGetUserIfExists(authenticatedUser.getUsername());
-        if (isAdmin(foundAuthenticatedUser)) {
+    public RentalResponseDTO findById(Long id) {
             return rentalRepository.findById(id)
                     .map(rentalMapper::toDTO)
                     .orElseThrow(() -> new RentalNotFoundException(id));
-        }
-        return rentalRepository.findByIdAndUsers(id, foundAuthenticatedUser)
-                .map(rentalMapper::toDTO)
-                .orElseThrow(() -> new RentalNotFoundException(id));
     }
 
-    public Page<RentalResponseDTO> findAll(AuthenticatedUser authenticatedUser, Pageable pageable) {
-        Users foundAuthenticatedUser = userService.verifyAndGetUserIfExists(authenticatedUser.getUsername());
-        if (isAdmin(foundAuthenticatedUser)) {
+    public Page<RentalResponseDTO> findAll(Pageable pageable) {
             return rentalRepository.findAll(pageable).map(rentalMapper::toDTO);
-        }
-        return rentalRepository.findAllByUsers(foundAuthenticatedUser, pageable)
-                .map(rentalMapper::toDTO);
     }
 
-    public void delete(Long id, AuthenticatedUser authenticatedUser) {
-        userService.verifyAndGetUserIfExists(authenticatedUser.getUsername());
+    public void delete(Long id) {
         Rental rentalToDelete = verifyIfExists(id);
 
         if(rentalToDelete.getReturnDate().equals(RENTAL_DEFAULT)) {
-            returnBookToStock(rentalToDelete.getBook());
+            manageBookStock(rentalToDelete.getBook(), true);
         }
-
         rentalRepository.deleteById(id);
     }
 
-    public RentalResponseDTO update(Long id, AuthenticatedUser authenticatedUser, RentalRequestUpdateDTO rentalRequestUpdateDTO) {
-        userService.verifyAndGetUserIfExists(authenticatedUser.getUsername());
+    public RentalResponseDTO update(Long id, RentalRequestUpdateDTO rentalRequestUpdateDTO) {
         Rental foundRental = verifyIfExists(id);
 
         if(!foundRental.getReturnDate().equals(RENTAL_DEFAULT)){
@@ -112,14 +91,10 @@ public class RentalService {
 
         Rental rentToSave = foundRental;
         rentToSave.setReturnDate(validateReturnDate(rentalRequestUpdateDTO, foundRental));
-        returnBookToStock(rentToSave.getBook());
+        manageBookStock(rentToSave.getBook(), true);
 
         Rental savedRent = rentalRepository.save(rentToSave);
         return rentalMapper.toDTO(savedRent);
-    }
-
-    private boolean isAdmin(Users user) {
-        return user.getRole().toString().equals(ROLE_ADMIN);
     }
 
     private String validateReturnDate(RentalRequestUpdateDTO rentalRequestUpdateDTO, Rental foundRental) {
@@ -140,14 +115,18 @@ public class RentalService {
         return rentStatus;
     }
 
-    private void returnBookToStock(Book book) {
-        Book alterBook = book;
-        alterBook.setQuantity(alterBook.getQuantity() + 1);
-        alterBook.setRentedQuantity(alterBook.getRentedQuantity() - 1);
+    private void manageBookStock(Book book, boolean addToStock) {
+        if(addToStock) {
+            Book alterBook = book;
+            alterBook.setQuantity(alterBook.getQuantity() + 1);
+            alterBook.setRentedQuantity(alterBook.getRentedQuantity() - 1);
+        } else {
+            book.setQuantity(book.getQuantity() - 1);
+            book.setRentedQuantity(book.getRentedQuantity() + 1);
+        }
     }
 
     private void verifyIfExists(Book book, Users user) {
-
         List<Rental> duplicatedRent = rentalRepository
                 .findByBookAndUsers(book, user);
         if (!duplicatedRent.isEmpty()) {
