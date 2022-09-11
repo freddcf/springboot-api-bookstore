@@ -1,10 +1,7 @@
 package com.fredfonseca.bookstoremanager.users.service;
 
 import com.fredfonseca.bookstoremanager.rentals.repository.RentalRepository;
-import com.fredfonseca.bookstoremanager.users.dto.AdminDTO;
-import com.fredfonseca.bookstoremanager.users.dto.MessageDTO;
-import com.fredfonseca.bookstoremanager.users.dto.UserDTO;
-import com.fredfonseca.bookstoremanager.users.dto.UserResponseDTO;
+import com.fredfonseca.bookstoremanager.users.dto.*;
 import com.fredfonseca.bookstoremanager.users.entity.Users;
 import com.fredfonseca.bookstoremanager.users.enums.Role;
 import com.fredfonseca.bookstoremanager.users.exception.*;
@@ -124,6 +121,22 @@ public class UserService {
     public void delete(Long id) {
         Users userToDelete = verifyAndGetIfExists(id);
 
+        if(userToDelete.getRole().getDescription().equals(ROLE_ADMIN)) {
+            throw new InvalidCredentialsChange(ROLE_USER);
+        }
+        if (!rentalRepository.findByUsers(userToDelete).isEmpty()) {
+            throw new DeleteDeniedException();
+        }
+        userRepository.deleteById(id);
+    }
+
+    public void deleteAdmin(Long id, AuthenticatedUser authenticatedUser) {
+        Users userToDelete = verifyAndGetIfExists(id);
+        verifyAndGetUserIfExists(authenticatedUser.getUsername());
+
+        if(userToDelete.getRole().getDescription().equals(ROLE_USER)) {
+            throw new InvalidCredentialsChange(ROLE_ADMIN);
+        }
         if(userToDelete.getUsername().equals("admin")) {
             throw new DeleteDeniedException(userToDelete.getUsername());
         }

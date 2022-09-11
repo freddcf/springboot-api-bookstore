@@ -59,6 +59,13 @@ public interface UserControllerDocs {
     })
     MessageDTO updateAdmin(Long id, AdminDTO userToUpdateDTO);
 
+    @ApiOperation(value = "Admin delete operation")
+    @ApiResponses(value = {
+            @ApiResponse(code = 204, message = "Success admin exclusion"),
+            @ApiResponse(code = 404, message = "Admin with id not found in the System")
+    })
+    void deleteAdmin(Long id, AuthenticatedUser authenticatedUser);
+
     @ApiOperation(value = "User authentication operation")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Success user authenticated"),
