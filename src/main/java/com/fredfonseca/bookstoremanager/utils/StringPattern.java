@@ -20,7 +20,7 @@ public class StringPattern {
 
     public String basicPattern(String str) {
         return str.replaceAll("[ ]+", " ")
-                .replaceAll("[^a-zA-Z0-9'`,. ]+", "")
+                .replaceAll("[^a-zA-Z0-9À-ú'`,. ]+", "")
                 .replaceAll("[']+", "'")
                 .replaceAll("[`]+", "`")
                 .replaceAll("[,]+", ",")
@@ -29,7 +29,7 @@ public class StringPattern {
 
     public String onlyWordsPattern(String str) {
         return str.replaceAll("[ ]+", " ")
-                .replaceAll("[^a-zA-Z'` ]+", "")
+                .replaceAll("[^a-zA-ZÀ-ú'` ]+", "")
                 .replaceAll("[']+", "'")
                 .replaceAll("[`]+", "`").trim();
     }
