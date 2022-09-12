@@ -4,6 +4,7 @@ import com.fredfonseca.bookstoremanager.users.enums.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -69,7 +70,8 @@ public class WebSecurityConfig{
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.cors().and()
                 .csrf().disable()
-                .authorizeHttpRequests().antMatchers(USERS_ADMIN_API_URL, RENTALS_API_URL).hasAnyRole(ROLE_ADMIN)
+                .authorizeHttpRequests().antMatchers(HttpMethod.GET,  RENTALS_API_URL).permitAll()
+                .antMatchers(USERS_ADMIN_API_URL, RENTALS_API_URL).hasAnyRole(ROLE_ADMIN)
                 .antMatchers(SWAGGER_URL, USERS_API_URL, PUBLISHERS_API_URL, BOOKS_API_URL).permitAll()
                 .anyRequest().authenticated()
                 .and()
