@@ -130,7 +130,11 @@ public class RentalService {
         List<Rental> duplicatedRent = rentalRepository
                 .findByBookAndUsers(book, user);
         if (!duplicatedRent.isEmpty()) {
-            throw new RentalAlreadyExistsException(book.getName(), user.getName());
+            duplicatedRent.forEach(rental -> {
+                if(rental.getReturnDate().equals(RENTAL_DEFAULT)) {
+                    throw new RentalAlreadyExistsException(book.getName(), user.getName());
+                }
+            });
         }
     }
 
