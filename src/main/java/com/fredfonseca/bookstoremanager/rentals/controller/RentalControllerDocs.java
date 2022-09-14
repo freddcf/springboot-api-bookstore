@@ -1,7 +1,6 @@
 package com.fredfonseca.bookstoremanager.rentals.controller;
 
 import com.fredfonseca.bookstoremanager.rentals.dto.RentalRequestDTO;
-import com.fredfonseca.bookstoremanager.rentals.dto.RentalRequestUpdateDTO;
 import com.fredfonseca.bookstoremanager.rentals.dto.RentalResponseDTO;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;

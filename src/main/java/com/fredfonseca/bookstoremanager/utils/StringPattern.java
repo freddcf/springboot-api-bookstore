@@ -13,7 +13,7 @@ public class StringPattern {
                 .replaceAll("[;]+", ";")
                 .replaceAll("[,]+", ",");
         String[] sentence = filteredString.split(" ");
-        sentence[sentence.length-1] = sentence[sentence.length-1]
+        sentence[sentence.length - 1] = sentence[sentence.length - 1]
                 .replaceAll("[,]|[;]", "");
         return join(sentence);
     }
@@ -36,8 +36,8 @@ public class StringPattern {
 
     private String join(String[] sentence) {
         String str = "";
-        for(int i = 0 ; i < sentence.length ; i++) {
-            str += " "+sentence[i];
+        for (int i = 0; i < sentence.length; i++) {
+            str += " " + sentence[i];
         }
         return str.trim();
     }
