@@ -43,5 +43,12 @@ public interface RentalControllerDocs {
             @ApiResponse(code = 200, message = "Success rent updated"),
             @ApiResponse(code = 400, message = "Missing required field, or an error on validation field rules")
     })
-    RentalResponseDTO update(Long id, RentalRequestUpdateDTO rentalRequestUpdateDTO);
+    RentalResponseDTO update(Long id, RentalRequestDTO rentalRequestDTO);
+
+    @ApiOperation(value = "Rental return operation")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success book returned"),
+            @ApiResponse(code = 400, message = "Missing required field, or an error on validation field rules")
+    })
+    RentalResponseDTO returnBook(Long id);
 }

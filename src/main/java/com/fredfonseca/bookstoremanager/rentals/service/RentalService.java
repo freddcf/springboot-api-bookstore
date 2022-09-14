@@ -18,7 +18,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -82,24 +85,49 @@ public class RentalService {
         rentalRepository.deleteById(id);
     }
 
-    public RentalResponseDTO update(Long id, RentalRequestUpdateDTO rentalRequestUpdateDTO) {
+    public RentalResponseDTO update(Long id, RentalRequestDTO rentalRequestDTO) {
+        Rental foundRental = verifyIfExists(id);
+        Book foundBook = bookService.verifyAndGetIfExists(rentalRequestDTO.getBookId());
+        Users foundUser = userService.verifyAndGetIfExists(rentalRequestDTO.getUserId());
+        checkBookAlreadyReturned(foundRental);
+
+        Rental rentToUpdate = rentalMapper.toModel(rentalRequestDTO);
+        rentToUpdate.setId(foundRental.getId());
+        rentToUpdate.setUsers(foundUser);
+        rentToUpdate.setBook(foundBook);
+        rentToUpdate.setReturnDate(foundRental.getReturnDate());
+        if(!foundRental.getBook().equals(rentToUpdate.getBook())){
+            manageBookStock(foundRental.getBook(), true);
+            manageBookStock(foundBook, false);
+        }
+        validateData(rentalRequestDTO, rentToUpdate, foundBook);
+
+        Rental updatedRent = rentalRepository.save(rentToUpdate);
+        return rentalMapper.toDTO(updatedRent);
+    }
+
+    public RentalResponseDTO returnBook(Long id) {
         Rental foundRental = verifyIfExists(id);
 
-        if(!foundRental.getReturnDate().equals(RENTAL_DEFAULT)){
-            throw new BookAlreadyReturnedException(foundRental.getUsers().getName(), foundRental.getBook().getName());
-        }
+        checkBookAlreadyReturned(foundRental);
 
         Rental rentToSave = foundRental;
-        rentToSave.setReturnDate(validateReturnDate(rentalRequestUpdateDTO, foundRental));
+        rentToSave.setReturnDate(validateReturnDate(foundRental));
         manageBookStock(rentToSave.getBook(), true);
 
         Rental savedRent = rentalRepository.save(rentToSave);
         return rentalMapper.toDTO(savedRent);
     }
 
-    private String validateReturnDate(RentalRequestUpdateDTO rentalRequestUpdateDTO, Rental foundRental) {
+    private void checkBookAlreadyReturned(Rental foundRental) {
+        if(!foundRental.getReturnDate().equals(RENTAL_DEFAULT)){
+            throw new BookAlreadyReturnedException(foundRental.getUsers().getName(), foundRental.getBook().getName());
+        }
+    }
+
+    private String validateReturnDate(Rental foundRental) {
         String rentStatus = "";
-        LocalDate returnDate = rentalRequestUpdateDTO.getReturnDate();
+        LocalDate returnDate = LocalDate.now();
         LocalDate rentalDate = foundRental.getRentalDate();
         LocalDate returnForecast = foundRental.getReturnForecast();
 
@@ -145,8 +173,8 @@ public class RentalService {
 
     private void validateData(RentalRequestDTO rentalRequestDTO, Rental rentToSave, Book book) {
         LocalDate today = LocalDate.now();
-        if (rentalRequestDTO.getRentalDate().isBefore(today)) {
-            throw new InvalidPatDateException();
+        if (rentalRequestDTO.getRentalDate().isAfter(today)) {
+            throw new InvalidPastDateException();
         }
 
         if (!(rentToSave.getRentalDate().isBefore(rentToSave.getReturnForecast()))) {
