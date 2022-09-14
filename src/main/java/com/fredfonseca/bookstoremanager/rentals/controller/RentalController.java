@@ -47,7 +47,12 @@ public class RentalController implements RentalControllerDocs{
     }
 
     @PutMapping("/{id}")
-    public RentalResponseDTO update(@PathVariable Long id, @RequestBody @Valid RentalRequestUpdateDTO rentalRequestUpdateDTO) {
-        return rentalService.update(id, rentalRequestUpdateDTO);
+    public RentalResponseDTO update(@PathVariable Long id, @RequestBody @Valid RentalRequestDTO rentalRequestDTO) {
+        return rentalService.update(id, rentalRequestDTO);
+    }
+
+    @PutMapping("/return/{id}")
+    public RentalResponseDTO returnBook(@PathVariable Long id) {
+        return rentalService.returnBook(id);
     }
 }
