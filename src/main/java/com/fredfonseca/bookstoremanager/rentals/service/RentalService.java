@@ -3,7 +3,6 @@ package com.fredfonseca.bookstoremanager.rentals.service;
 import com.fredfonseca.bookstoremanager.books.entity.Book;
 import com.fredfonseca.bookstoremanager.books.service.BookService;
 import com.fredfonseca.bookstoremanager.rentals.dto.RentalRequestDTO;
-import com.fredfonseca.bookstoremanager.rentals.dto.RentalRequestUpdateDTO;
 import com.fredfonseca.bookstoremanager.rentals.dto.RentalResponseDTO;
 import com.fredfonseca.bookstoremanager.rentals.entity.Rental;
 import com.fredfonseca.bookstoremanager.rentals.enums.RentalReturnStates;
@@ -18,10 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 @Service
