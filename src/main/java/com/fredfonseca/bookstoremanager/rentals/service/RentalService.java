@@ -176,7 +176,8 @@ public class RentalService {
             throw new InvalidRentalDateException(7);
         }
 
-        if (!(rentToSave.getRentalDate().isBefore(rentToSave.getReturnForecast()))) {
+        if (!(rentToSave.getRentalDate().isBefore(rentToSave.getReturnForecast())) &&
+            !(rentToSave.getRentalDate().isEqual(rentToSave.getReturnForecast()))) {
             throw new InvalidDateException();
         }
 
