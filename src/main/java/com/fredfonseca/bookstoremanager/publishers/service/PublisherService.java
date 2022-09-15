@@ -58,7 +58,7 @@ public class PublisherService {
 
     public void delete(Long id) {
         Publisher publisherToDelete = verifyAndGetIfExists(id);
-        if (!bookRepository.findByPublisher(publisherToDelete).isEmpty()) {
+        if (!publisherToDelete.getBooks().isEmpty()) {
             throw new DeleteDeniedException();
         }
         publisherRepository.deleteById(id);
