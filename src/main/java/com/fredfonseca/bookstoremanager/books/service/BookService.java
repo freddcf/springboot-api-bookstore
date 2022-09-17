@@ -71,7 +71,7 @@ public class BookService {
 
     public void delete(Long id) {
         Book bookToDelete = verifyAndGetIfExists(id);
-        if (!rentalRepository.findByBook(bookToDelete).isEmpty()) {
+        if (!bookToDelete.getRentals().isEmpty()) {
             throw new DeleteDeniedException();
         }
         bookRepository.deleteById(id);

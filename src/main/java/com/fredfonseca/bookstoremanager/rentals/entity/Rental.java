@@ -1,5 +1,6 @@
 package com.fredfonseca.bookstoremanager.rentals.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fredfonseca.bookstoremanager.books.entity.Book;
 import com.fredfonseca.bookstoremanager.users.entity.Users;
 import lombok.Data;
@@ -24,9 +25,13 @@ public class Rental {
     @Column(length = 30)
     private String returnDate;
 
+    @JsonBackReference
     @ManyToOne(cascade = {CascadeType.MERGE})
+    @JoinColumn(name = "book_id")
     private Book book;
 
+    @JsonBackReference
     @ManyToOne(cascade = {CascadeType.MERGE})
+    @JoinColumn(name = "users_id")
     private Users users;
 }
