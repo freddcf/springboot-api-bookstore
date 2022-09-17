@@ -124,7 +124,7 @@ public class UserService {
         if(userToDelete.getRole().getDescription().equals(ROLE_ADMIN)) {
             throw new InvalidCredentialsChange(ROLE_USER);
         }
-        if (!rentalRepository.findByUsers(userToDelete).isEmpty()) {
+        if (!userToDelete.getRentals().isEmpty()) {
             throw new DeleteDeniedException();
         }
         userRepository.deleteById(id);

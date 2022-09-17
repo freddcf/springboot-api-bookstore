@@ -1,10 +1,14 @@
 package com.fredfonseca.bookstoremanager.books.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fredfonseca.bookstoremanager.publishers.entity.Publisher;
+import com.fredfonseca.bookstoremanager.rentals.entity.Rental;
 import lombok.Data;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @Entity
@@ -29,6 +33,12 @@ public class Book {
     @Column(nullable = false, length = 45)
     private String author;
 
+    @JsonManagedReference
+    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
+    private List<Rental> rentals;
+
+    @JsonBackReference
     @ManyToOne(cascade = {CascadeType.MERGE})
+    @JoinColumn(name = "publisher_id")
     private Publisher publisher;
 }
