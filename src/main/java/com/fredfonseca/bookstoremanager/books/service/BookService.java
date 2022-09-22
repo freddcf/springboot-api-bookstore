@@ -86,7 +86,7 @@ public class BookService {
         bookToUpdate.setId(id);
         bookToUpdate.setPublisher(foundPublisher);
         bookToUpdate.setRentedQuantity(foundBook.getRentedQuantity());
-        bookToUpdate.setLaunchDate(foundBook.getLaunchDate());
+        bookToUpdate.setLaunchDate(bookRequestDTO.getLaunchDate());
         bookToUpdate.setName(stringPattern.textPattern(bookToUpdate.getName()));
         bookToUpdate.setAuthor(stringPattern.onlyWordsPattern(bookToUpdate.getAuthor()));
         Book updatedBook = bookRepository.save(bookToUpdate);
